@@ -60,7 +60,7 @@ export default function HowItWorksPage() {
     <>
       {/* Hero */}
       <section className="relative bg-primary-950 text-white overflow-hidden">
-        <DottedSurface dotColor={[130, 154, 177]} fogColor={0x0a1929} />
+        <DottedSurface dotColor={[130, 154, 177]} fogColor={0x000000} />
         <div className="container-narrow mx-auto px-5 py-24 md:py-28 relative z-10">
           <FadeIn>
             <p className="text-xs font-semibold tracking-[0.2em] uppercase text-accent-400 mb-4">How It Works</p>

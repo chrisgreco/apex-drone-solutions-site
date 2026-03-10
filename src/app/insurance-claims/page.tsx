@@ -18,7 +18,7 @@ export default function InsuranceClaimsPage() {
     <>
       {/* Hero */}
       <section className="relative bg-primary-950 text-white overflow-hidden">
-        <DottedSurface dotColor={[130, 154, 177]} fogColor={0x0a1929} />
+        <DottedSurface dotColor={[130, 154, 177]} fogColor={0x000000} />
         <div className="container-narrow mx-auto px-5 py-24 md:py-28 relative z-10">
           <FadeIn>
             <p className="text-xs font-semibold tracking-[0.2em] uppercase text-accent-400 mb-4">Insurance &amp; Claims</p>
@@ -121,7 +121,7 @@ export default function InsuranceClaimsPage() {
 
       {/* CTA */}
       <section className="relative bg-primary-950 text-white overflow-hidden">
-        <DottedSurface dotColor={[100, 130, 160]} fogColor={0x0a1929} className="opacity-50" />
+        <DottedSurface dotColor={[100, 130, 160]} fogColor={0x000000} className="opacity-50" />
         <div className="container-narrow mx-auto px-5 py-20 text-center relative z-10">
           <FadeIn>
             <h2 className="text-3xl md:text-4xl font-bold">See how Apex improves claims operations</h2>

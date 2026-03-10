@@ -21,7 +21,7 @@ export default function HomePage() {
     <>
       {/* ── Hero ───────────────────────────────────────── */}
       <section className="relative min-h-[90vh] flex items-center bg-primary-950 overflow-hidden">
-        <DottedSurface dotColor={[130, 154, 177]} fogColor={0x0a1929} />
+        <DottedSurface dotColor={[130, 154, 177]} fogColor={0x000000} />
 
         <div className="container-narrow mx-auto px-5 py-20 relative z-10">
           <FadeIn>

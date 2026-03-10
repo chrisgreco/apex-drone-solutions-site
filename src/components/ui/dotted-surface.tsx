@@ -12,7 +12,7 @@ export function DottedSurface({
 	className,
 	children,
 	dotColor = [200, 200, 200],
-	fogColor = 0x0a1929,
+	fogColor = 0x000000,
 	...props
 }: DottedSurfaceProps) {
 	const containerRef = useRef<HTMLDivElement>(null);
