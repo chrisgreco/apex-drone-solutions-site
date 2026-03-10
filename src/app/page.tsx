@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { AnimatedGridPattern } from "@/components/AnimatedGridPattern";
+import { DottedSurface } from "@/components/ui/dotted-surface";
 import { NumberTicker } from "@/components/NumberTicker";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/FadeIn";
 import { GlobeVisualization } from "@/components/GlobeVisualization";
-import { BeamDivider, GlowingOrb } from "@/components/Beam";
+import { BeamDivider } from "@/components/Beam";
 import {
   IconShield,
   IconClock,
@@ -21,14 +21,7 @@ export default function HomePage() {
     <>
       {/* ── Hero ───────────────────────────────────────── */}
       <section className="relative min-h-[90vh] flex items-center bg-primary-950 overflow-hidden">
-        <AnimatedGridPattern
-          numSquares={30}
-          maxOpacity={0.15}
-          duration={3}
-          className="text-primary-400 [mask-image:radial-gradient(500px_circle_at_center,white,transparent)]"
-        />
-        <GlowingOrb className="-top-20 -right-20 opacity-40" />
-        <GlowingOrb className="bottom-0 left-1/4 opacity-20" />
+        <DottedSurface dotColor={[130, 154, 177]} fogColor={0x0a1929} />
 
         <div className="container-narrow mx-auto px-5 py-20 relative z-10">
           <FadeIn>

@@ -58,7 +58,7 @@ export function Footer() {
             &copy; {new Date().getFullYear()} Apex Drone Solutions. All rights reserved.
           </p>
           <p className="text-xs text-primary-600">
-            Powered by Apex Aerial Systems
+            Powered by Apex Drone Solutions
           </p>
         </div>
       </div>

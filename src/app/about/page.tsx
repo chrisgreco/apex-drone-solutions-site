@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/FadeIn";
-import { AnimatedGridPattern } from "@/components/AnimatedGridPattern";
+import { DottedSurface } from "@/components/ui/dotted-surface";
 import { IconCheckCircle, IconUsers, IconArrowRight } from "@/components/Icons";
 
 export default function AboutPage() {
@@ -10,7 +10,7 @@ export default function AboutPage() {
     <>
       {/* Hero */}
       <section className="relative bg-primary-950 text-white overflow-hidden">
-        <AnimatedGridPattern numSquares={20} maxOpacity={0.1} duration={4} className="text-primary-400 [mask-image:radial-gradient(400px_circle_at_center,white,transparent)]" />
+        <DottedSurface dotColor={[130, 154, 177]} fogColor={0x0a1929} />
         <div className="container-narrow mx-auto px-5 py-24 md:py-28 relative z-10">
           <FadeIn>
             <p className="text-xs font-semibold tracking-[0.2em] uppercase text-accent-400 mb-4">About Apex</p>
