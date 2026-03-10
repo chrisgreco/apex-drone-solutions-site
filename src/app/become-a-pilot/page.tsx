@@ -2,6 +2,7 @@
 
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/FadeIn";
 import { DottedSurface } from "@/components/ui/dotted-surface";
+import { DroneVisualization3D } from "@/components/DroneVisualization3D";
 import {
   IconCheckCircle,
   IconMapPin,
@@ -26,19 +27,26 @@ export default function BecomeAPilotPage() {
       <section className="relative bg-primary-950 text-white overflow-hidden">
         <DottedSurface dotColor={[130, 154, 177]} fogColor={0x000000} />
         <div className="container-narrow mx-auto px-5 py-24 md:py-28 relative z-10">
-          <FadeIn>
-            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-accent-400 mb-4">Become a Pilot</p>
-          </FadeIn>
-          <FadeIn delay={0.1}>
-            <h1 className="text-4xl md:text-6xl font-bold leading-[1.08] max-w-3xl">
-              Fly with Apex. <span className="text-accent-400">Get consistent work.</span>
-            </h1>
-          </FadeIn>
-          <FadeIn delay={0.2}>
-            <p className="mt-6 text-lg text-white/80 max-w-2xl">
-              Join a nationwide network of Part 107 pilots. We handle sales, scheduling, and clients. You handle the flights.
-            </p>
-          </FadeIn>
+          <div className="grid lg:grid-cols-5 gap-8 items-center">
+            <div className="lg:col-span-3">
+              <FadeIn>
+                <p className="text-xs font-semibold tracking-[0.2em] uppercase text-accent-400 mb-4">Become a Pilot</p>
+              </FadeIn>
+              <FadeIn delay={0.1}>
+                <h1 className="text-4xl md:text-6xl font-bold leading-[1.08] max-w-3xl">
+                  Fly with Apex. <span className="text-accent-400">Get consistent work.</span>
+                </h1>
+              </FadeIn>
+              <FadeIn delay={0.2}>
+                <p className="mt-6 text-lg text-white/80 max-w-2xl">
+                  Join a nationwide network of Part 107 pilots. We handle sales, scheduling, and clients. You handle the flights.
+                </p>
+              </FadeIn>
+            </div>
+            <FadeIn delay={0.3} direction="right" className="lg:col-span-2 hidden lg:block">
+              <DroneVisualization3D className="h-[320px] pointer-events-none" size="sm" />
+            </FadeIn>
+          </div>
         </div>
       </section>
 

@@ -5,6 +5,7 @@ import { DottedSurface } from "@/components/ui/dotted-surface";
 import { NumberTicker } from "@/components/NumberTicker";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/FadeIn";
 import { GlobeVisualization } from "@/components/GlobeVisualization";
+import { DroneVisualization3D } from "@/components/DroneVisualization3D";
 import { BeamDivider } from "@/components/Beam";
 import {
   IconShield,
@@ -24,38 +25,46 @@ export default function HomePage() {
         <DottedSurface dotColor={[130, 154, 177]} fogColor={0x000000} />
 
         <div className="container-narrow mx-auto px-5 py-20 relative z-10">
-          <FadeIn>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary-700 bg-primary-900/50 backdrop-blur-sm mb-8">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent-500 animate-pulse" />
-              <span className="text-xs font-medium text-white/70">Nationwide Drone Coverage</span>
+          <div className="grid lg:grid-cols-2 gap-8 items-center">
+            <div>
+              <FadeIn>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary-700 bg-primary-900/50 backdrop-blur-sm mb-8">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent-500 animate-pulse" />
+                  <span className="text-xs font-medium text-white/70">Nationwide Drone Coverage</span>
+                </div>
+              </FadeIn>
+
+              <FadeIn delay={0.1}>
+                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.05] tracking-tight">
+                  Roof documentation,{" "}
+                  <span className="text-accent-400">reimagined</span>
+                </h1>
+              </FadeIn>
+
+              <FadeIn delay={0.2}>
+                <p className="mt-6 text-lg md:text-xl text-white/80 max-w-xl leading-relaxed">
+                  AI-powered drone inspections that deliver carrier-grade property
+                  reports in 48 hours. Built for insurers, adjusters, and roofers.
+                </p>
+              </FadeIn>
+
+              <FadeIn delay={0.3}>
+                <div className="flex flex-wrap gap-4 mt-10">
+                  <Link href="/contact" className="btn-primary text-[0.9375rem]">
+                    Talk to Sales
+                    <IconArrowRight className="w-4 h-4" />
+                  </Link>
+                  <Link href="/how-it-works" className="btn-ghost text-[0.9375rem]">
+                    See How It Works
+                  </Link>
+                </div>
+              </FadeIn>
             </div>
-          </FadeIn>
 
-          <FadeIn delay={0.1}>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.05] tracking-tight max-w-4xl">
-              Roof documentation,{" "}
-              <span className="text-accent-400">reimagined</span>
-            </h1>
-          </FadeIn>
-
-          <FadeIn delay={0.2}>
-            <p className="mt-6 text-lg md:text-xl text-white/80 max-w-2xl leading-relaxed">
-              AI-powered drone inspections that deliver carrier-grade property
-              reports in 48 hours. Built for insurers, adjusters, and roofers.
-            </p>
-          </FadeIn>
-
-          <FadeIn delay={0.3}>
-            <div className="flex flex-wrap gap-4 mt-10">
-              <Link href="/contact" className="btn-primary text-[0.9375rem]">
-                Talk to Sales
-                <IconArrowRight className="w-4 h-4" />
-              </Link>
-              <Link href="/how-it-works" className="btn-ghost text-[0.9375rem]">
-                See How It Works
-              </Link>
-            </div>
-          </FadeIn>
+            <FadeIn delay={0.2} direction="right">
+              <DroneVisualization3D className="h-[400px] lg:h-[500px] pointer-events-none" />
+            </FadeIn>
+          </div>
         </div>
       </section>
 
