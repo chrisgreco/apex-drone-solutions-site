@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+@theme {
+  /* Primary - Deep Navy */
+  --color-primary-50: #f0f4f8;
+  --color-primary-100: #d9e2ec;
+  --color-primary-200: #bcccdc;
+  --color-primary-300: #9fb3c8;
+  --color-primary-400: #829ab1;
+  --color-primary-500: #627d98;
+  --color-primary-600: #486581;
+  --color-primary-700: #334e68;
+  --color-primary-800: #243b53;
+  --color-primary-900: #102a43;
+  --color-primary-950: #0a1929;
+
+  /* Accent - Safety Orange */
+  --color-accent-50: #fff8f0;
+  --color-accent-100: #ffecd6;
+  --color-accent-200: #ffd5a9;
+  --color-accent-300: #ffb76b;
+  --color-accent-400: #ff9a3c;
+  --color-accent-500: #e8792a;
+  --color-accent-600: #c45d1a;
+  --color-accent-700: #9e4a15;
+  --color-accent-800: #7a3a12;
+  --color-accent-900: #5c2d10;
+
+  /* Neutral - Warm Grays */
+  --color-neutral-50: #f7f7f5;
+  --color-neutral-100: #ededea;
+  --color-neutral-200: #dcdcd7;
+  --color-neutral-300: #c4c4bc;
+  --color-neutral-400: #a3a398;
+  --color-neutral-500: #7c7c72;
+  --color-neutral-600: #5e5e56;
+  --color-neutral-700: #454540;
+  --color-neutral-800: #2d2d29;
+  --color-neutral-900: #1a1a17;
+
+  /* Success */
+  --color-success-500: #2d8a4e;
+  --color-success-100: #e6f4ec;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-heading: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-neutral-800);
+  background-color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--color-primary-900);
+  letter-spacing: -0.01em;
+}
+
+/* Base button styles */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.75rem;
+  background-color: var(--color-accent-500);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border-radius: 0.375rem;
+  transition: all 150ms ease;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+}
+.btn-primary:hover {
+  background-color: var(--color-accent-600);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.75rem;
+  background-color: transparent;
+  color: var(--color-primary-800);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border-radius: 0.375rem;
+  border: 2px solid var(--color-primary-200);
+  transition: all 150ms ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn-secondary:hover {
+  border-color: var(--color-primary-400);
+  background-color: var(--color-primary-50);
+}
+
+/* Section spacing */
+.section {
+  padding: 5rem 1.5rem;
+}
+@media (min-width: 768px) {
+  .section {
+    padding: 6rem 2rem;
+  }
+}
+
+.container-narrow {
+  max-width: 72rem;
+  margin: 0 auto;
+}
