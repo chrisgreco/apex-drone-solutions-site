@@ -21,7 +21,7 @@ export default function AboutPage() {
             </h1>
           </FadeIn>
           <FadeIn delay={0.2}>
-            <p className="mt-6 text-lg text-primary-200 max-w-2xl">
+            <p className="mt-6 text-lg text-white/80 max-w-2xl">
               Drones plus AI are the most practical way to deliver property documentation at scale.
               We built Apex on that thesis.
             </p>

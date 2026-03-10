@@ -27,7 +27,7 @@ export default function HomePage() {
           <FadeIn>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary-700 bg-primary-900/50 backdrop-blur-sm mb-8">
               <span className="w-1.5 h-1.5 rounded-full bg-accent-500 animate-pulse" />
-              <span className="text-xs font-medium text-primary-300">Nationwide Drone Coverage</span>
+              <span className="text-xs font-medium text-white/70">Nationwide Drone Coverage</span>
             </div>
           </FadeIn>
 
@@ -39,7 +39,7 @@ export default function HomePage() {
           </FadeIn>
 
           <FadeIn delay={0.2}>
-            <p className="mt-6 text-lg md:text-xl text-primary-200 max-w-2xl leading-relaxed">
+            <p className="mt-6 text-lg md:text-xl text-white/80 max-w-2xl leading-relaxed">
               AI-powered drone inspections that deliver carrier-grade property
               reports in 48 hours. Built for insurers, adjusters, and roofers.
             </p>
@@ -74,7 +74,7 @@ export default function HomePage() {
                   <div className="text-3xl md:text-4xl font-bold text-white">
                     <NumberTicker value={stat.value} suffix={stat.suffix} />
                   </div>
-                  <div className="mt-1 text-sm text-primary-400">{stat.label}</div>
+                  <div className="mt-1 text-sm text-white/60">{stat.label}</div>
                 </div>
               </FadeIn>
             ))}
@@ -223,7 +223,7 @@ export default function HomePage() {
                 <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">
                   Nationwide coverage, local expertise
                 </h2>
-                <p className="mt-4 text-primary-200 leading-relaxed">
+                <p className="mt-4 text-white/80 leading-relaxed">
                   Every Apex pilot holds FAA Part 107 certification and carries commercial liability insurance.
                   Trained on our documentation standards. Equipped for roof-grade data capture.
                 </p>

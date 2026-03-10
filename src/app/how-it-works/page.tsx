@@ -71,7 +71,7 @@ export default function HowItWorksPage() {
             </h1>
           </FadeIn>
           <FadeIn delay={0.2}>
-            <p className="mt-6 text-lg text-primary-200 max-w-2xl">
+            <p className="mt-6 text-lg text-white/80 max-w-2xl">
               Submit a request. We handle dispatch, flight, processing, and delivery. You get a complete report.
             </p>
           </FadeIn>

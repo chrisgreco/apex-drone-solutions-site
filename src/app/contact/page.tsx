@@ -28,7 +28,7 @@ export default function ContactPage() {
             </h1>
           </FadeIn>
           <FadeIn delay={0.2}>
-            <p className="mt-4 text-lg text-primary-200 max-w-xl">
+            <p className="mt-4 text-lg text-white/80 max-w-xl">
               Our team typically responds within one business day.
             </p>
           </FadeIn>

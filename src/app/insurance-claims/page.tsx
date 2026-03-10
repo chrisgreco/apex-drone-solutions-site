@@ -29,7 +29,7 @@ export default function InsuranceClaimsPage() {
             </h1>
           </FadeIn>
           <FadeIn delay={0.2}>
-            <p className="mt-6 text-lg text-primary-200 max-w-2xl">
+            <p className="mt-6 text-lg text-white/80 max-w-2xl">
               Consistent, high-quality documentation without putting adjusters on damaged roofs.
               Faster triage, fewer supplements, better outcomes.
             </p>
@@ -125,7 +125,7 @@ export default function InsuranceClaimsPage() {
         <div className="container-narrow mx-auto px-5 py-20 text-center relative z-10">
           <FadeIn>
             <h2 className="text-3xl md:text-4xl font-bold">See how Apex improves claims operations</h2>
-            <p className="mt-3 text-primary-200 max-w-lg mx-auto">We work with carriers of all sizes. Let&apos;s talk volume, markets, and integration.</p>
+            <p className="mt-3 text-white/80 max-w-lg mx-auto">We work with carriers of all sizes. Let&apos;s talk volume, markets, and integration.</p>
             <Link href="/contact" className="btn-primary mt-8 inline-flex">Schedule a Demo <IconArrowRight className="w-4 h-4" /></Link>
           </FadeIn>
         </div>

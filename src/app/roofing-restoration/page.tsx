@@ -29,7 +29,7 @@ export default function RoofingRestorationPage() {
             </h1>
           </FadeIn>
           <FadeIn delay={0.2}>
-            <p className="mt-6 text-lg text-primary-200 max-w-2xl">
+            <p className="mt-6 text-lg text-white/80 max-w-2xl">
               Aerial documentation that carriers trust. Reduce re-inspections, close jobs faster, and protect your revenue with objective third-party data.
             </p>
           </FadeIn>
@@ -108,7 +108,7 @@ export default function RoofingRestorationPage() {
         <div className="container-narrow mx-auto px-5 py-20 text-center relative z-10">
           <FadeIn>
             <h2 className="text-3xl md:text-4xl font-bold">Give your team the documentation advantage</h2>
-            <p className="mt-3 text-primary-200 max-w-lg mx-auto">Five crews or fifty, Apex scales with your operation.</p>
+            <p className="mt-3 text-white/80 max-w-lg mx-auto">Five crews or fifty, Apex scales with your operation.</p>
             <Link href="/contact" className="btn-primary mt-8 inline-flex">Get Started <IconArrowRight className="w-4 h-4" /></Link>
           </FadeIn>
         </div>
