@@ -1,6 +1,8 @@
-import type { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
-import { SectionHeading } from "@/components/SectionHeading";
+import { FadeIn } from "@/components/FadeIn";
+import { AnimatedGridPattern } from "@/components/AnimatedGridPattern";
 import {
   IconUpload,
   IconDrone,
@@ -8,174 +10,120 @@ import {
   IconChart,
   IconFileText,
   IconCheckCircle,
+  IconArrowRight,
 } from "@/components/Icons";
-
-export const metadata: Metadata = {
-  title: "How It Works",
-  description:
-    "See how Apex Drone Solutions handles property documentation end-to-end: from intake and scheduling to drone flight, AI processing, and report delivery.",
-};
 
 const steps = [
   {
-    icon: <IconUpload className="w-7 h-7" />,
+    icon: <IconUpload className="w-6 h-6" />,
     title: "Intake & Request",
-    description:
-      "Submit the property address, scope, and any special instructions through our client portal, API, or flat-file upload. Apex confirms the request and provides an estimated completion date within minutes.",
-    details: [
-      "Single-property or batch uploads",
-      "API integration for high-volume clients",
-      "Automatic address validation and geocoding",
-    ],
+    desc: "Submit the property address and scope through our portal, API, or flat-file upload. Confirmation and ETA within minutes.",
+    details: ["Single-property or batch uploads", "API for high-volume clients", "Automatic address validation"],
   },
   {
-    icon: <IconDrone className="w-7 h-7" />,
+    icon: <IconDrone className="w-6 h-6" />,
     title: "Scheduling & Dispatch",
-    description:
-      "Our platform identifies the closest qualified pilot and schedules the flight based on weather, airspace, and client priority. The pilot receives a detailed job packet with flight parameters.",
-    details: [
-      "Automatic pilot matching by location and availability",
-      "Weather and airspace monitoring",
-      "Client notified when flight is scheduled",
-    ],
+    desc: "Our platform matches the nearest qualified pilot and schedules the flight based on weather and airspace.",
+    details: ["Automatic pilot matching", "Weather and airspace monitoring", "Client notified on scheduling"],
   },
   {
-    icon: <IconCamera className="w-7 h-7" />,
+    icon: <IconCamera className="w-6 h-6" />,
     title: "On-Site Drone Operations",
-    description:
-      "The pilot flies the property using calibrated flight plans designed for insurance-grade documentation. Every slope, flashing, penetration, and elevation is captured in high resolution.",
-    details: [
-      "Standardized flight plans for consistency",
-      "High-resolution nadir and oblique imagery",
-      "GPS-tagged photos with altitude and orientation metadata",
-    ],
+    desc: "Calibrated flight plans capture every slope, flashing, and penetration in high resolution.",
+    details: ["Standardized flight plans", "High-res nadir and oblique imagery", "GPS-tagged with metadata"],
   },
   {
-    icon: <IconChart className="w-7 h-7" />,
+    icon: <IconChart className="w-6 h-6" />,
     title: "AI Processing & Analysis",
-    description:
-      "Raw imagery is uploaded to our processing pipeline. Computer vision models detect damage patterns, measure roof facets, and generate 3D models. Human QA analysts review every output before delivery.",
-    details: [
-      "Automated damage detection and annotation",
-      "3D roof model with measurements",
-      "Human quality review on every report",
-    ],
+    desc: "Computer vision detects damage, measures facets, and generates 3D models. Human QA on every report.",
+    details: ["Automated damage detection", "3D roof model with measurements", "Human quality review"],
   },
   {
-    icon: <IconFileText className="w-7 h-7" />,
+    icon: <IconFileText className="w-6 h-6" />,
     title: "Report Delivery",
-    description:
-      "The completed report is delivered as a structured PDF, an interactive online viewer, and raw data files. Reports can be pushed directly to your claims management or estimating platform.",
-    details: [
-      "PDF report with annotated imagery",
-      "Online interactive viewer with 3D model",
-      "Data export compatible with Xactimate and other tools",
-    ],
+    desc: "Structured PDF, interactive online viewer, and raw data. Push directly to your claims platform.",
+    details: ["PDF with annotated imagery", "Interactive 3D viewer", "Xactimate-compatible export"],
   },
 ];
 
 const faqs = [
-  {
-    q: "How long does a typical property documentation take?",
-    a: "The on-site drone flight takes 15–30 minutes depending on property size and complexity. Reports are delivered within 48 hours of the flight, with rush options available.",
-  },
-  {
-    q: "What areas do you cover?",
-    a: "Apex operates nationwide through our network of FAA Part 107 certified pilots. We currently have the strongest coverage in storm-prone regions across the Southeast, Gulf Coast, Midwest, and Texas. We're expanding coverage continuously.",
-  },
-  {
-    q: "Do you need access to the property?",
-    a: "In most cases, no. Drones capture data from above without needing to enter the property or access the roof. For certain scopes, a brief ground-level walkthrough may be included.",
-  },
-  {
-    q: "What data formats do you deliver?",
-    a: "Reports include a structured PDF, an interactive online viewer with 3D model, high-resolution imagery, and raw measurement data. We also offer integrations with Xactimate, Symbility, and other estimating tools.",
-  },
-  {
-    q: "How do you handle weather delays?",
-    a: "Our platform monitors weather conditions in real time. If conditions are unsuitable for flight, we automatically reschedule and notify you. Safety is never compromised for speed.",
-  },
-  {
-    q: "Is the data compliant with carrier documentation standards?",
-    a: "Yes. Apex reports are designed to meet the documentation requirements of major insurance carriers. Every image is time-stamped, geo-tagged, and captured with calibrated equipment.",
-  },
-  {
-    q: "Can I white-label the reports?",
-    a: "Yes. We offer white-label and co-branded report options for carrier and contractor partners. Contact our team for details.",
-  },
+  { q: "How long does a property documentation take?", a: "The drone flight takes 15-30 minutes. Reports are delivered within 48 hours, with rush options available." },
+  { q: "What areas do you cover?", a: "Nationwide via our FAA Part 107 pilot network. Strongest coverage in storm-prone regions: Southeast, Gulf Coast, Midwest, and Texas." },
+  { q: "Do you need property access?", a: "In most cases, no. Drones capture from above without entering the property. Some scopes include a brief ground walkthrough." },
+  { q: "What data formats do you deliver?", a: "Structured PDF, interactive online viewer with 3D model, high-res imagery, and raw measurement data. Xactimate and Symbility integrations available." },
+  { q: "How do you handle weather?", a: "Real-time weather monitoring. Unsuitable conditions trigger automatic rescheduling and client notification." },
+  { q: "Can I white-label reports?", a: "Yes. White-label and co-branded options available for carrier and contractor partners." },
 ];
 
 export default function HowItWorksPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-primary-950 text-white">
-        <div className="container-narrow mx-auto px-5 py-20 md:py-24">
-          <div className="max-w-3xl">
-            <span className="inline-block text-xs font-semibold tracking-[0.15em] uppercase text-accent-400 mb-4">
-              How It Works
-            </span>
-            <h1 className="text-4xl md:text-5xl font-bold leading-[1.12] mb-6">
-              From request to report, handled end-to-end
+      <section className="relative bg-primary-950 text-white overflow-hidden">
+        <AnimatedGridPattern numSquares={20} maxOpacity={0.1} duration={4} className="text-primary-400 [mask-image:radial-gradient(400px_circle_at_center,white,transparent)]" />
+        <div className="container-narrow mx-auto px-5 py-24 md:py-28 relative z-10">
+          <FadeIn>
+            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-accent-400 mb-4">How It Works</p>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <h1 className="text-4xl md:text-6xl font-bold leading-[1.08] max-w-3xl">
+              From request to report, <span className="text-accent-400">handled end-to-end</span>
             </h1>
-            <p className="text-lg text-primary-300 leading-relaxed max-w-2xl">
-              Apex manages the entire documentation workflow so you can focus on
-              your claims, estimates, and projects. Here&apos;s what happens after
-              you submit a request.
+          </FadeIn>
+          <FadeIn delay={0.2}>
+            <p className="mt-6 text-lg text-primary-300 max-w-2xl">
+              Submit a request. We handle dispatch, flight, processing, and delivery. You get a complete report.
             </p>
-          </div>
+          </FadeIn>
         </div>
       </section>
 
       {/* Timeline */}
       <section className="section bg-white">
-        <div className="container-narrow mx-auto">
-          <div className="max-w-3xl mx-auto">
-            {steps.map((step, i) => (
-              <div key={i} className="relative pl-20 pb-14 last:pb-0">
-                {/* Connector line */}
+        <div className="container-narrow mx-auto max-w-3xl">
+          {steps.map((step, i) => (
+            <FadeIn key={i} delay={i * 0.08}>
+              <div className="relative pl-20 pb-14 last:pb-0">
                 {i < steps.length - 1 && (
-                  <div className="absolute left-[1.34rem] top-14 bottom-0 w-px bg-neutral-200" />
+                  <div className="absolute left-[1.22rem] top-14 bottom-0 w-px bg-neutral-200" />
                 )}
-                {/* Icon */}
-                <div className="absolute left-0 top-0 w-11 h-11 flex items-center justify-center rounded-lg bg-accent-500 text-white">
+                <div className="absolute left-0 top-0 w-10 h-10 flex items-center justify-center rounded-lg bg-accent-500 text-white">
                   {step.icon}
                 </div>
-
-                <h3 className="text-xl font-semibold text-primary-900 mb-2">
-                  <span className="text-accent-500 mr-2">0{i + 1}</span>
-                  {step.title}
+                <h3 className="text-xl font-semibold text-primary-900">
+                  <span className="text-accent-500 mr-2">0{i + 1}</span>{step.title}
                 </h3>
-                <p className="text-neutral-500 leading-relaxed mb-4">
-                  {step.description}
-                </p>
-                <ul className="space-y-2">
+                <p className="mt-2 text-neutral-500 leading-relaxed">{step.desc}</p>
+                <ul className="mt-3 space-y-1.5">
                   {step.details.map((d, j) => (
-                    <li key={j} className="flex items-start gap-2 text-sm text-neutral-600">
-                      <IconCheckCircle className="w-4 h-4 text-success-500 mt-0.5 shrink-0" />
-                      {d}
+                    <li key={j} className="flex items-center gap-2 text-sm text-neutral-600">
+                      <IconCheckCircle className="w-3.5 h-3.5 text-accent-500 shrink-0" />{d}
                     </li>
                   ))}
                 </ul>
               </div>
-            ))}
-          </div>
+            </FadeIn>
+          ))}
         </div>
       </section>
 
       {/* FAQ */}
       <section className="section bg-neutral-50">
         <div className="container-narrow mx-auto">
-          <SectionHeading
-            tag="FAQ"
-            title="Common questions"
-          />
-          <div className="max-w-3xl mx-auto space-y-6">
+          <FadeIn>
+            <div className="text-center">
+              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-accent-500 mb-3">FAQ</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-primary-900">Common questions</h2>
+            </div>
+          </FadeIn>
+          <div className="max-w-3xl mx-auto mt-10 space-y-4">
             {faqs.map((faq, i) => (
-              <div key={i} className="bg-white border border-neutral-100 rounded-lg p-6">
-                <h3 className="text-base font-semibold text-primary-900 mb-2">{faq.q}</h3>
-                <p className="text-sm text-neutral-500 leading-relaxed">{faq.a}</p>
-              </div>
+              <FadeIn key={i} delay={i * 0.05}>
+                <div className="bg-white border border-neutral-100 rounded-xl p-5">
+                  <h3 className="font-semibold text-primary-900">{faq.q}</h3>
+                  <p className="mt-1.5 text-sm text-neutral-500 leading-relaxed">{faq.a}</p>
+                </div>
+              </FadeIn>
             ))}
           </div>
         </div>
@@ -184,20 +132,14 @@ export default function HowItWorksPage() {
       {/* CTA */}
       <section className="section bg-white">
         <div className="container-narrow mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-primary-900 mb-4">
-            Ready to see it in action?
-          </h2>
-          <p className="text-lg text-neutral-500 max-w-xl mx-auto mb-8">
-            We can walk you through a sample report and discuss how Apex fits your workflow.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/contact" className="btn-primary text-base">
-              Talk to Sales
-            </Link>
-            <Link href="/become-a-pilot" className="btn-secondary text-base">
-              Join as a Pilot
-            </Link>
-          </div>
+          <FadeIn>
+            <h2 className="text-3xl md:text-4xl font-bold text-primary-900">Ready to see it in action?</h2>
+            <p className="mt-3 text-neutral-500 max-w-md mx-auto">We&apos;ll walk you through a sample report and discuss your workflow.</p>
+            <div className="flex flex-wrap justify-center gap-4 mt-8">
+              <Link href="/contact" className="btn-primary">Talk to Sales <IconArrowRight className="w-4 h-4" /></Link>
+              <Link href="/become-a-pilot" className="btn-secondary">Join as a Pilot</Link>
+            </div>
+          </FadeIn>
         </div>
       </section>
     </>

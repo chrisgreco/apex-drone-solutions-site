@@ -1,7 +1,9 @@
-import type { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
-import { SectionHeading } from "@/components/SectionHeading";
-import { Card } from "@/components/Card";
+import { FadeIn, StaggerContainer, StaggerItem } from "@/components/FadeIn";
+import { AnimatedGridPattern } from "@/components/AnimatedGridPattern";
+import { GlowingOrb } from "@/components/Beam";
 import {
   IconCheckCircle,
   IconCamera,
@@ -12,188 +14,105 @@ import {
   IconArrowRight,
 } from "@/components/Icons";
 
-export const metadata: Metadata = {
-  title: "Roofing & Restoration",
-  description:
-    "Win more insurance approvals with complete, objective drone documentation. Pre-storm and post-storm programs for roofing and restoration contractors.",
-};
-
 export default function RoofingRestorationPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-primary-950 text-white">
-        <div className="container-narrow mx-auto px-5 py-20 md:py-24">
-          <div className="max-w-3xl">
-            <span className="inline-block text-xs font-semibold tracking-[0.15em] uppercase text-accent-400 mb-4">
-              Roofing &amp; Restoration
-            </span>
-            <h1 className="text-4xl md:text-5xl font-bold leading-[1.12] mb-6">
-              Document every slope. Win more approvals.
+      <section className="relative bg-primary-950 text-white overflow-hidden">
+        <AnimatedGridPattern numSquares={20} maxOpacity={0.1} duration={4} className="text-primary-400 [mask-image:radial-gradient(400px_circle_at_bottom_left,white,transparent)]" />
+        <GlowingOrb className="top-10 right-0 opacity-30" />
+        <div className="container-narrow mx-auto px-5 py-24 md:py-28 relative z-10">
+          <FadeIn>
+            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-accent-400 mb-4">Roofing &amp; Restoration</p>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <h1 className="text-4xl md:text-6xl font-bold leading-[1.08] max-w-3xl">
+              Document every slope. <span className="text-accent-400">Win more approvals.</span>
             </h1>
-            <p className="text-lg text-primary-300 leading-relaxed max-w-2xl mb-8">
-              Apex gives roofing and restoration contractors the aerial documentation
-              they need to support insurance claims, reduce re-inspections, and close
-              jobs faster. Complete, objective data that carriers trust.
+          </FadeIn>
+          <FadeIn delay={0.2}>
+            <p className="mt-6 text-lg text-primary-300 max-w-2xl">
+              Aerial documentation that carriers trust. Reduce re-inspections, close jobs faster, and protect your revenue with objective third-party data.
             </p>
-            <div className="flex flex-wrap gap-4">
-              <Link href="/contact" className="btn-primary">
-                Get Started
-              </Link>
-              <Link href="/how-it-works" className="btn-secondary !border-primary-600 !text-primary-200 hover:!bg-primary-900">
-                See How It Works
-              </Link>
+          </FadeIn>
+          <FadeIn delay={0.3}>
+            <div className="flex flex-wrap gap-4 mt-8">
+              <Link href="/contact" className="btn-primary">Get Started <IconArrowRight className="w-4 h-4" /></Link>
+              <Link href="/how-it-works" className="btn-ghost">See How It Works</Link>
             </div>
-          </div>
+          </FadeIn>
         </div>
       </section>
 
       {/* Value props */}
       <section className="section bg-white">
         <div className="container-narrow mx-auto">
-          <SectionHeading
-            tag="Why Contractors Choose Apex"
-            title="Better documentation means better results"
-            description="When the data is thorough and objective, carriers approve faster and supplements drop. Apex gives your team an edge on every file."
-          />
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7">
-            <Card icon={<IconCheckCircle />} title="Win More Approvals">
-              Complete, all-slope documentation with damage annotations gives adjusters
-              what they need to approve the claim without a return visit.
-            </Card>
-            <Card icon={<IconCamera />} title="Document Every Detail">
-              High-resolution imagery captures damage that&apos;s invisible from a ladder.
-              3D models provide accurate measurements for every facet.
-            </Card>
-            <Card icon={<IconChart />} title="Reduce Re-Inspections">
-              When the first report covers everything, there&apos;s no reason for a
-              carrier to send someone back. Save time on every project.
-            </Card>
-            <Card icon={<IconShield />} title="Objective Third-Party Data">
-              Apex reports come from independent, certified drone operators&mdash;not
-              from your sales team. Carriers trust the source.
-            </Card>
-            <Card icon={<IconFileText />} title="Professional Reports">
-              Branded, structured PDF reports and online viewers that you can share
-              with carriers, homeowners, and your own team.
-            </Card>
-            <Card icon={<IconHome />} title="Pre &amp; Post-Storm Programs">
-              Document properties before storm season to establish baseline condition.
-              After a storm, mobilize quickly to capture damage across your portfolio.
-            </Card>
-          </div>
+          <FadeIn>
+            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-accent-500 mb-3">Why Contractors Choose Apex</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-primary-900 max-w-lg">Better documentation, better results</h2>
+          </FadeIn>
+          <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+            {[
+              { icon: <IconCheckCircle className="w-5 h-5" />, title: "Win More Approvals", desc: "All-slope documentation with damage annotations. Adjusters approve without return visits." },
+              { icon: <IconCamera className="w-5 h-5" />, title: "Document Every Detail", desc: "High-res imagery captures damage invisible from a ladder. 3D models with accurate measurements." },
+              { icon: <IconChart className="w-5 h-5" />, title: "Reduce Re-Inspections", desc: "First report covers everything. No reason for the carrier to send someone back." },
+              { icon: <IconShield className="w-5 h-5" />, title: "Third-Party Objectivity", desc: "Reports from independent, certified operators. Carriers trust the source." },
+              { icon: <IconFileText className="w-5 h-5" />, title: "Professional Reports", desc: "Branded PDF reports and online viewers for carriers, homeowners, and your team." },
+              { icon: <IconHome className="w-5 h-5" />, title: "Pre & Post-Storm", desc: "Baseline documentation before storm season. Rapid damage capture after." },
+            ].map((card, i) => (
+              <StaggerItem key={i}>
+                <div className="border border-neutral-100 rounded-xl p-6 hover:shadow-md transition-shadow">
+                  <div className="w-9 h-9 flex items-center justify-center rounded-lg bg-primary-50 text-primary-700">{card.icon}</div>
+                  <h3 className="mt-4 font-semibold text-primary-900">{card.title}</h3>
+                  <p className="mt-1.5 text-sm text-neutral-500 leading-relaxed">{card.desc}</p>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
         </div>
       </section>
 
-      {/* How contractors use Apex */}
+      {/* Use cases */}
       <section className="section bg-neutral-50">
         <div className="container-narrow mx-auto">
-          <SectionHeading
-            tag="How Contractors Use Apex"
-            title="From lead to close, Apex supports the entire job"
-          />
-          <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
-            <div className="bg-white border border-neutral-100 rounded-lg p-7">
-              <h3 className="text-lg font-semibold text-primary-900 mb-3">Initial Property Assessment</h3>
-              <p className="text-sm text-neutral-500 leading-relaxed mb-4">
-                Before you commit resources to a project, get a complete aerial view of the
-                property. Identify damage areas, measure the roof, and assess scope.
-              </p>
-              <ul className="space-y-2">
-                <li className="flex items-start gap-2 text-sm text-neutral-600">
-                  <IconCheckCircle className="w-4 h-4 text-success-500 mt-0.5 shrink-0" />
-                  Full roof measurement and slope analysis
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-600">
-                  <IconCheckCircle className="w-4 h-4 text-success-500 mt-0.5 shrink-0" />
-                  Damage identification with annotated imagery
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-600">
-                  <IconCheckCircle className="w-4 h-4 text-success-500 mt-0.5 shrink-0" />
-                  3D model for accurate material estimation
-                </li>
-              </ul>
-            </div>
-            <div className="bg-white border border-neutral-100 rounded-lg p-7">
-              <h3 className="text-lg font-semibold text-primary-900 mb-3">Insurance Claim Support</h3>
-              <p className="text-sm text-neutral-500 leading-relaxed mb-4">
-                Submit Apex reports alongside your claim documentation. The objective, structured
-                data gives adjusters confidence to approve without delays.
-              </p>
-              <ul className="space-y-2">
-                <li className="flex items-start gap-2 text-sm text-neutral-600">
-                  <IconCheckCircle className="w-4 h-4 text-success-500 mt-0.5 shrink-0" />
-                  Carrier-grade documentation format
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-600">
-                  <IconCheckCircle className="w-4 h-4 text-success-500 mt-0.5 shrink-0" />
-                  Time-stamped, geo-tagged evidence
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-600">
-                  <IconCheckCircle className="w-4 h-4 text-success-500 mt-0.5 shrink-0" />
-                  Independent third-party source
-                </li>
-              </ul>
-            </div>
-            <div className="bg-white border border-neutral-100 rounded-lg p-7">
-              <h3 className="text-lg font-semibold text-primary-900 mb-3">Pre-Storm Documentation</h3>
-              <p className="text-sm text-neutral-500 leading-relaxed mb-4">
-                Establish baseline roof condition before storm season. When damage occurs,
-                you have clear before-and-after evidence for every property.
-              </p>
-              <ul className="space-y-2">
-                <li className="flex items-start gap-2 text-sm text-neutral-600">
-                  <IconCheckCircle className="w-4 h-4 text-success-500 mt-0.5 shrink-0" />
-                  Baseline condition reports
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-600">
-                  <IconCheckCircle className="w-4 h-4 text-success-500 mt-0.5 shrink-0" />
-                  Portfolio-wide documentation programs
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-600">
-                  <IconCheckCircle className="w-4 h-4 text-success-500 mt-0.5 shrink-0" />
-                  Rapid post-storm comparison reports
-                </li>
-              </ul>
-            </div>
-            <div className="bg-white border border-neutral-100 rounded-lg p-7">
-              <h3 className="text-lg font-semibold text-primary-900 mb-3">Job Completion Verification</h3>
-              <p className="text-sm text-neutral-500 leading-relaxed mb-4">
-                After the work is done, document the completed roof from above. Provide
-                homeowners and carriers with proof of quality workmanship.
-              </p>
-              <ul className="space-y-2">
-                <li className="flex items-start gap-2 text-sm text-neutral-600">
-                  <IconCheckCircle className="w-4 h-4 text-success-500 mt-0.5 shrink-0" />
-                  Post-installation verification imagery
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-600">
-                  <IconCheckCircle className="w-4 h-4 text-success-500 mt-0.5 shrink-0" />
-                  Quality assurance documentation
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-600">
-                  <IconCheckCircle className="w-4 h-4 text-success-500 mt-0.5 shrink-0" />
-                  Customer-facing completion reports
-                </li>
-              </ul>
-            </div>
-          </div>
+          <FadeIn>
+            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-accent-500 mb-3">How Contractors Use Apex</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-primary-900">From lead to close</h2>
+          </FadeIn>
+          <StaggerContainer className="grid md:grid-cols-2 gap-6 mt-10 max-w-4xl">
+            {[
+              { title: "Initial Assessment", items: ["Full roof measurement and slope analysis", "Damage identification with annotated imagery", "3D model for accurate material estimation"] },
+              { title: "Insurance Claim Support", items: ["Carrier-grade documentation format", "Time-stamped, geo-tagged evidence", "Independent third-party source"] },
+              { title: "Pre-Storm Documentation", items: ["Baseline condition reports", "Portfolio-wide documentation programs", "Rapid post-storm comparison reports"] },
+              { title: "Job Completion Verification", items: ["Post-installation verification imagery", "Quality assurance documentation", "Customer-facing completion reports"] },
+            ].map((card, i) => (
+              <StaggerItem key={i}>
+                <div className="bg-white border border-neutral-100 rounded-xl p-6">
+                  <h3 className="font-semibold text-primary-900 mb-3">{card.title}</h3>
+                  <ul className="space-y-2">
+                    {card.items.map((item, j) => (
+                      <li key={j} className="flex items-start gap-2 text-sm text-neutral-600">
+                        <IconCheckCircle className="w-4 h-4 text-accent-500 mt-0.5 shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="section bg-primary-950 text-white">
-        <div className="container-narrow mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Give your team the documentation advantage
-          </h2>
-          <p className="text-lg text-primary-300 max-w-xl mx-auto mb-8">
-            Whether you run five crews or fifty, Apex scales with your operation.
-            Talk to us about contractor programs and volume pricing.
-          </p>
-          <Link href="/contact" className="btn-primary text-base">
-            Get Started
-          </Link>
+      <section className="relative bg-primary-950 text-white overflow-hidden">
+        <AnimatedGridPattern numSquares={15} maxOpacity={0.08} duration={5} className="text-primary-400" />
+        <div className="container-narrow mx-auto px-5 py-20 text-center relative z-10">
+          <FadeIn>
+            <h2 className="text-3xl md:text-4xl font-bold">Give your team the documentation advantage</h2>
+            <p className="mt-3 text-primary-300 max-w-lg mx-auto">Five crews or fifty, Apex scales with your operation.</p>
+            <Link href="/contact" className="btn-primary mt-8 inline-flex">Get Started <IconArrowRight className="w-4 h-4" /></Link>
+          </FadeIn>
         </div>
       </section>
     </>

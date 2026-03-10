@@ -62,7 +62,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: 700;
   color: var(--color-primary-900);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 /* Base button styles */
@@ -70,39 +70,66 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   padding: 0.75rem 1.75rem;
   background-color: var(--color-accent-500);
   color: #ffffff;
   font-weight: 600;
-  font-size: 0.9375rem;
-  border-radius: 0.375rem;
-  transition: all 150ms ease;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+  transition: all 200ms ease;
   cursor: pointer;
   border: none;
   text-decoration: none;
 }
 .btn-primary:hover {
   background-color: var(--color-accent-600);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(232, 121, 42, 0.3);
 }
 
 .btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   padding: 0.75rem 1.75rem;
   background-color: transparent;
   color: var(--color-primary-800);
   font-weight: 600;
-  font-size: 0.9375rem;
-  border-radius: 0.375rem;
-  border: 2px solid var(--color-primary-200);
-  transition: all 150ms ease;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+  border: 1.5px solid var(--color-primary-200);
+  transition: all 200ms ease;
   cursor: pointer;
   text-decoration: none;
 }
 .btn-secondary:hover {
   border-color: var(--color-primary-400);
   background-color: var(--color-primary-50);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  transition: all 200ms ease;
+  cursor: pointer;
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+}
+.btn-ghost:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Section spacing */
@@ -111,11 +138,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 @media (min-width: 768px) {
   .section {
-    padding: 6rem 2rem;
+    padding: 6.5rem 2rem;
   }
 }
 
 .container-narrow {
   max-width: 72rem;
   margin: 0 auto;
+}
+
+/* Glass card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 1rem;
+  backdrop-filter: blur(12px);
 }

@@ -1,7 +1,9 @@
-import type { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
-import { SectionHeading } from "@/components/SectionHeading";
-import { Card, StepCard } from "@/components/Card";
+import { FadeIn, StaggerContainer, StaggerItem } from "@/components/FadeIn";
+import { AnimatedGridPattern } from "@/components/AnimatedGridPattern";
+import { GlowingOrb } from "@/components/Beam";
 import {
   IconClock,
   IconShield,
@@ -12,104 +14,84 @@ import {
   IconZap,
 } from "@/components/Icons";
 
-export const metadata: Metadata = {
-  title: "Insurance & Claims",
-  description:
-    "Faster, safer property documentation for insurance carriers, claim leaders, and vendor managers. Reduce cycle times and improve triage after storm events.",
-};
-
 export default function InsuranceClaimsPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-primary-950 text-white">
-        <div className="container-narrow mx-auto px-5 py-20 md:py-24">
-          <div className="max-w-3xl">
-            <span className="inline-block text-xs font-semibold tracking-[0.15em] uppercase text-accent-400 mb-4">
-              Insurance &amp; Claims
-            </span>
-            <h1 className="text-4xl md:text-5xl font-bold leading-[1.12] mb-6">
-              Close claims faster with drone-captured property data
+      <section className="relative bg-primary-950 text-white overflow-hidden">
+        <AnimatedGridPattern numSquares={20} maxOpacity={0.1} duration={4} className="text-primary-400 [mask-image:radial-gradient(400px_circle_at_top_right,white,transparent)]" />
+        <GlowingOrb className="-top-20 right-1/4 opacity-30" />
+        <div className="container-narrow mx-auto px-5 py-24 md:py-28 relative z-10">
+          <FadeIn>
+            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-accent-400 mb-4">Insurance &amp; Claims</p>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <h1 className="text-4xl md:text-6xl font-bold leading-[1.08] max-w-3xl">
+              Close claims faster with <span className="text-accent-400">drone-captured</span> property data
             </h1>
-            <p className="text-lg text-primary-300 leading-relaxed max-w-2xl mb-8">
-              Apex gives carrier claims teams and vendor managers consistent,
-              high-quality property documentation&mdash;without putting adjusters
-              on damaged roofs. Faster triage, fewer supplements, and better outcomes
-              on every file.
+          </FadeIn>
+          <FadeIn delay={0.2}>
+            <p className="mt-6 text-lg text-primary-300 max-w-2xl">
+              Consistent, high-quality documentation without putting adjusters on damaged roofs.
+              Faster triage, fewer supplements, better outcomes.
             </p>
-            <Link href="/contact" className="btn-primary">
-              Schedule a Demo
-            </Link>
-          </div>
+          </FadeIn>
+          <FadeIn delay={0.3}>
+            <Link href="/contact" className="btn-primary mt-8 inline-flex">Schedule a Demo <IconArrowRight className="w-4 h-4" /></Link>
+          </FadeIn>
         </div>
       </section>
 
-      {/* Pain points / value */}
+      {/* Value props */}
       <section className="section bg-white">
         <div className="container-narrow mx-auto">
-          <SectionHeading
-            tag="The Challenge"
-            title="Traditional roof inspections slow down every claim"
-            description="Manual inspections are weather-dependent, inconsistent between adjusters, and create safety exposure. Supplements and re-inspections add days to cycle time."
-          />
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7">
-            <Card icon={<IconClock />} title="Faster Cycle Times">
-              Drone documentation is completed in a single site visit and reports are delivered
-              within 48 hours. No rescheduling, no return trips.
-            </Card>
-            <Card icon={<IconShield />} title="Reduced Safety Exposure">
-              Adjusters stay on the ground. Drones handle steep pitches, fire-damaged structures,
-              and active storm areas without risk.
-            </Card>
-            <Card icon={<IconChart />} title="Consistent Documentation">
-              Every report follows the same data standard regardless of region or pilot.
-              Structured outputs that integrate with Xactimate and other estimating tools.
-            </Card>
-            <Card icon={<IconZap />} title="Rapid Storm Response">
-              Surge capacity when you need it. Our pilot network scales to meet catastrophe
-              volume in the markets that matter most.
-            </Card>
-            <Card icon={<IconFileText />} title="Carrier-Grade Reports">
-              High-resolution imagery, labeled damage annotations, 3D roof models with
-              measurements, and automated PDF reports ready for the claim file.
-            </Card>
-            <Card icon={<IconCheckCircle />} title="Fewer Supplements">
-              Complete, all-slope documentation reduces the back-and-forth between desk
-              adjusters and field teams. Get it right the first time.
-            </Card>
-          </div>
+          <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { icon: <IconClock className="w-5 h-5" />, title: "Faster Cycle Times", desc: "Single site visit. Reports in 48 hours. No rescheduling." },
+              { icon: <IconShield className="w-5 h-5" />, title: "Reduced Safety Exposure", desc: "Adjusters stay on the ground. Drones handle steep pitches and storm damage." },
+              { icon: <IconChart className="w-5 h-5" />, title: "Consistent Documentation", desc: "Same data standard across every region and pilot. Xactimate-compatible." },
+              { icon: <IconZap className="w-5 h-5" />, title: "Rapid Storm Response", desc: "Surge capacity when you need it. Our network scales for CAT events." },
+              { icon: <IconFileText className="w-5 h-5" />, title: "Carrier-Grade Reports", desc: "Labeled damage, 3D roof models, measurements, and automated PDF reports." },
+              { icon: <IconCheckCircle className="w-5 h-5" />, title: "Fewer Supplements", desc: "Complete all-slope documentation reduces back-and-forth. Get it right the first time." },
+            ].map((card, i) => (
+              <StaggerItem key={i}>
+                <div className="border border-neutral-100 rounded-xl p-6 hover:shadow-md transition-shadow">
+                  <div className="w-9 h-9 flex items-center justify-center rounded-lg bg-primary-50 text-primary-700">{card.icon}</div>
+                  <h3 className="mt-4 font-semibold text-primary-900">{card.title}</h3>
+                  <p className="mt-1.5 text-sm text-neutral-500 leading-relaxed">{card.desc}</p>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
         </div>
       </section>
 
-      {/* Workflow integration */}
+      {/* Workflow */}
       <section className="section bg-neutral-50">
         <div className="container-narrow mx-auto">
-          <SectionHeading
-            tag="Workflow Integration"
-            title="Apex fits into your existing claims process"
-            description="No new systems to learn. Apex slots into the flow between FNOL and estimate."
-          />
-          <div className="max-w-3xl mx-auto space-y-10">
-            <StepCard number="01" title="FNOL triggers a request">
-              When a claim is filed, submit the property address and scope through our portal,
-              API, or flat-file integration. Apex takes it from there.
-            </StepCard>
-            <StepCard number="02" title="Pilot dispatched automatically">
-              Our platform matches the job to the nearest qualified pilot and schedules the
-              flight. You receive a confirmation and ETA within minutes.
-            </StepCard>
-            <StepCard number="03" title="Drone captures property data">
-              The pilot captures all roof slopes, elevations, and areas of interest using
-              calibrated flight plans optimized for insurance documentation.
-            </StepCard>
-            <StepCard number="04" title="AI processes and annotates">
-              Computer vision identifies damage signatures, measures roof facets, and
-              generates a 3D model. Human QA reviews every report before delivery.
-            </StepCard>
-            <StepCard number="05" title="Report delivered to your system">
-              The completed report&mdash;PDF, online viewer, and raw data&mdash;is delivered
-              to the adjuster or pushed directly into your claims platform.
-            </StepCard>
+          <FadeIn>
+            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-accent-500 mb-3">Workflow Integration</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-primary-900 max-w-lg">Slots into your existing claims process</h2>
+          </FadeIn>
+
+          <div className="mt-12 max-w-3xl mx-auto space-y-8">
+            {[
+              { step: "01", title: "FNOL triggers a request", desc: "Submit the property address via portal, API, or flat-file. Apex handles the rest." },
+              { step: "02", title: "Pilot dispatched", desc: "Nearest qualified pilot is matched and scheduled. Confirmation and ETA within minutes." },
+              { step: "03", title: "Data captured", desc: "Calibrated flight plans capture all slopes, elevations, and areas of interest." },
+              { step: "04", title: "AI processes & annotates", desc: "Computer vision identifies damage, measures facets, generates 3D model. Human QA reviews." },
+              { step: "05", title: "Report delivered", desc: "PDF, online viewer, and raw data pushed directly into your claims platform." },
+            ].map((item, i) => (
+              <FadeIn key={i} delay={i * 0.08}>
+                <div className="flex gap-5">
+                  <div className="w-10 h-10 shrink-0 flex items-center justify-center rounded-lg bg-accent-500 text-white text-sm font-bold">{item.step}</div>
+                  <div>
+                    <h3 className="font-semibold text-primary-900">{item.title}</h3>
+                    <p className="mt-1 text-sm text-neutral-500">{item.desc}</p>
+                  </div>
+                </div>
+              </FadeIn>
+            ))}
           </div>
         </div>
       </section>
@@ -117,56 +99,37 @@ export default function InsuranceClaimsPage() {
       {/* Use cases */}
       <section className="section bg-white">
         <div className="container-narrow mx-auto">
-          <SectionHeading
-            tag="Use Cases"
-            title="From daily claims to catastrophe events"
-          />
-          <div className="grid md:grid-cols-2 gap-7 max-w-4xl mx-auto">
-            <div className="border border-neutral-100 rounded-lg p-7">
-              <h3 className="text-lg font-semibold text-primary-900 mb-2">Daily / Weather Claims</h3>
-              <p className="text-sm text-neutral-500 leading-relaxed">
-                Hail, wind, and water damage claims benefit from complete, unbiased
-                aerial documentation that eliminates the need for adjuster roof access.
-              </p>
-            </div>
-            <div className="border border-neutral-100 rounded-lg p-7">
-              <h3 className="text-lg font-semibold text-primary-900 mb-2">Catastrophe Response</h3>
-              <p className="text-sm text-neutral-500 leading-relaxed">
-                After a major storm, Apex surges pilots into affected regions to document
-                hundreds of properties per day, helping carriers triage and prioritize.
-              </p>
-            </div>
-            <div className="border border-neutral-100 rounded-lg p-7">
-              <h3 className="text-lg font-semibold text-primary-900 mb-2">Underwriting Surveys</h3>
-              <p className="text-sm text-neutral-500 leading-relaxed">
-                Capture roof condition, age, and material data for new policies or
-                renewals without scheduling a physical inspection.
-              </p>
-            </div>
-            <div className="border border-neutral-100 rounded-lg p-7">
-              <h3 className="text-lg font-semibold text-primary-900 mb-2">Litigation Support</h3>
-              <p className="text-sm text-neutral-500 leading-relaxed">
-                Time-stamped, geo-tagged aerial evidence that holds up in disputes.
-                Objective documentation from a third-party source.
-              </p>
-            </div>
-          </div>
+          <FadeIn>
+            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-accent-500 mb-3">Use Cases</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-primary-900">From daily claims to catastrophe events</h2>
+          </FadeIn>
+          <StaggerContainer className="grid md:grid-cols-2 gap-6 mt-10 max-w-4xl">
+            {[
+              { title: "Daily Weather Claims", desc: "Hail, wind, and water damage documented with complete, unbiased aerial data." },
+              { title: "Catastrophe Response", desc: "Surge pilots into affected regions. Document hundreds of properties per day." },
+              { title: "Underwriting Surveys", desc: "Roof condition, age, and material data for new policies or renewals." },
+              { title: "Litigation Support", desc: "Time-stamped, geo-tagged evidence from an independent third-party source." },
+            ].map((card, i) => (
+              <StaggerItem key={i}>
+                <div className="border border-neutral-100 rounded-xl p-6">
+                  <h3 className="font-semibold text-primary-900">{card.title}</h3>
+                  <p className="mt-1.5 text-sm text-neutral-500">{card.desc}</p>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="section bg-primary-950 text-white">
-        <div className="container-narrow mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            See how Apex can improve your claims operation
-          </h2>
-          <p className="text-lg text-primary-300 max-w-xl mx-auto mb-8">
-            We work with carriers of all sizes. Let&apos;s talk about your volume, your
-            markets, and how drone documentation fits your workflow.
-          </p>
-          <Link href="/contact" className="btn-primary text-base">
-            Schedule a Demo
-          </Link>
+      <section className="relative bg-primary-950 text-white overflow-hidden">
+        <AnimatedGridPattern numSquares={15} maxOpacity={0.08} duration={5} className="text-primary-400" />
+        <div className="container-narrow mx-auto px-5 py-20 text-center relative z-10">
+          <FadeIn>
+            <h2 className="text-3xl md:text-4xl font-bold">See how Apex improves claims operations</h2>
+            <p className="mt-3 text-primary-300 max-w-lg mx-auto">We work with carriers of all sizes. Let&apos;s talk volume, markets, and integration.</p>
+            <Link href="/contact" className="btn-primary mt-8 inline-flex">Schedule a Demo <IconArrowRight className="w-4 h-4" /></Link>
+          </FadeIn>
         </div>
       </section>
     </>
