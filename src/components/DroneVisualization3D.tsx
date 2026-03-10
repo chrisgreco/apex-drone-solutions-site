@@ -45,16 +45,24 @@ export function DroneVisualization3D({
 		container.appendChild(renderer.domElement);
 
 		// Lights
-		const ambient = new THREE.AmbientLight(0x102a43, 0.5);
+		const ambient = new THREE.AmbientLight(0xffffff, 0.6);
 		scene.add(ambient);
 
-		const key = new THREE.DirectionalLight(0xffffff, 1.4);
-		key.position.set(3, 5, 3);
+		const key = new THREE.DirectionalLight(0xffffff, 2.0);
+		key.position.set(3, 5, 4);
 		scene.add(key);
 
-		const accent = new THREE.PointLight(0xe8792a, 3, 10);
-		accent.position.set(0, -1.5, 2.5);
+		const fill = new THREE.DirectionalLight(0x8899bb, 0.8);
+		fill.position.set(-3, 2, -2);
+		scene.add(fill);
+
+		const accent = new THREE.PointLight(0xe8792a, 4, 12);
+		accent.position.set(0, -1, 3);
 		scene.add(accent);
+
+		const rim = new THREE.PointLight(0x4488ff, 2, 10);
+		rim.position.set(-2, 1, -3);
+		scene.add(rim);
 
 		// Groups
 		const sceneGroup = new THREE.Group();
@@ -74,35 +82,37 @@ export function DroneVisualization3D({
 
 		// Materials
 		const bodyMat = new THREE.MeshStandardMaterial({
-			color: 0x102a43,
-			metalness: 0.6,
-			roughness: 0.3,
+			color: 0xb0b8c4,
+			metalness: 0.5,
+			roughness: 0.35,
 		});
 		const armMat = new THREE.MeshStandardMaterial({
-			color: 0x1a3a55,
-			metalness: 0.5,
-			roughness: 0.4,
+			color: 0x8892a0,
+			metalness: 0.4,
+			roughness: 0.45,
 		});
 		const motorMat = new THREE.MeshStandardMaterial({
 			color: 0xe8792a,
-			metalness: 0.7,
-			roughness: 0.2,
+			metalness: 0.6,
+			roughness: 0.25,
+			emissive: 0xe8792a,
+			emissiveIntensity: 0.15,
 		});
 		const propMat = new THREE.MeshStandardMaterial({
-			color: 0x0d2035,
+			color: 0x556677,
 			metalness: 0.3,
-			roughness: 0.6,
+			roughness: 0.5,
 			transparent: true,
-			opacity: 0.85,
+			opacity: 0.9,
 		});
 		const gimbalMat = new THREE.MeshStandardMaterial({
-			color: 0x0d2035,
-			metalness: 0.8,
-			roughness: 0.1,
+			color: 0x445566,
+			metalness: 0.7,
+			roughness: 0.15,
 		});
 		const lensMat = new THREE.MeshStandardMaterial({
-			color: 0x0a0a1a,
-			metalness: 0.95,
+			color: 0x1a1a2e,
+			metalness: 0.9,
 			roughness: 0.05,
 		});
 		materials.push(bodyMat, armMat, motorMat, propMat, gimbalMat, lensMat);
