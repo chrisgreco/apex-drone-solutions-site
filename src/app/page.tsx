@@ -39,7 +39,7 @@ export default function HomePage() {
           </FadeIn>
 
           <FadeIn delay={0.2}>
-            <p className="mt-6 text-lg md:text-xl text-primary-300 max-w-2xl leading-relaxed">
+            <p className="mt-6 text-lg md:text-xl text-primary-200 max-w-2xl leading-relaxed">
               AI-powered drone inspections that deliver carrier-grade property
               reports in 48 hours. Built for insurers, adjusters, and roofers.
             </p>
@@ -223,7 +223,7 @@ export default function HomePage() {
                 <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">
                   Nationwide coverage, local expertise
                 </h2>
-                <p className="mt-4 text-primary-300 leading-relaxed">
+                <p className="mt-4 text-primary-200 leading-relaxed">
                   Every Apex pilot holds FAA Part 107 certification and carries commercial liability insurance.
                   Trained on our documentation standards. Equipped for roof-grade data capture.
                 </p>

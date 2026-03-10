@@ -35,7 +35,7 @@ export default function BecomeAPilotPage() {
             </h1>
           </FadeIn>
           <FadeIn delay={0.2}>
-            <p className="mt-6 text-lg text-primary-300 max-w-2xl">
+            <p className="mt-6 text-lg text-primary-200 max-w-2xl">
               Join a nationwide network of Part 107 pilots. We handle sales, scheduling, and clients. You handle the flights.
             </p>
           </FadeIn>

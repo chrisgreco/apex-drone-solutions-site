@@ -64,7 +64,7 @@ export function DottedSurface({
 				const y = 0;
 				const z = iy * SEPARATION - (AMOUNTY * SEPARATION) / 2;
 				positions.push(x, y, z);
-				colors.push(dotColor[0], dotColor[1], dotColor[2]);
+				colors.push(dotColor[0] / 255, dotColor[1] / 255, dotColor[2] / 255);
 			}
 		}
 
@@ -128,22 +128,12 @@ export function DottedSurface({
 
 		return () => {
 			window.removeEventListener('resize', handleResize);
-			if (sceneRef.current) {
-				cancelAnimationFrame(sceneRef.current.animationId);
-				sceneRef.current.scene.traverse((object) => {
-					if (object instanceof THREE.Points) {
-						object.geometry.dispose();
-						if (Array.isArray(object.material)) {
-							object.material.forEach((m) => m.dispose());
-						} else {
-							object.material.dispose();
-						}
-					}
-				});
-				sceneRef.current.renderer.dispose();
-				if (container && sceneRef.current.renderer.domElement.parentNode === container) {
-					container.removeChild(sceneRef.current.renderer.domElement);
-				}
+			cancelAnimationFrame(animationId);
+			geometry.dispose();
+			material.dispose();
+			renderer.dispose();
+			if (container && renderer.domElement.parentNode === container) {
+				container.removeChild(renderer.domElement);
 			}
 		};
 	}, [dotColor, fogColor]);
