@@ -32,12 +32,21 @@ export default function LoginPage() {
         if (error) throw error;
         router.push(next);
       } else {
-        const { error } = await supabase.auth.signUp({
+        // Use server-side signup to auto-confirm
+        const res = await fetch("/api/auth/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        // Auto sign in after signup
+        const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
         if (error) throw error;
-        setError("Check your email for a confirmation link.");
+        router.push(next);
       }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "An error occurred");
