@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import { Providers } from "@/components/Providers";
-import { ElevenLabsWidget } from "@/components/ElevenLabsWidget";
+import { MarketingLayout } from "@/components/MarketingLayout";
 
 export const metadata: Metadata = {
   title: {
@@ -36,10 +34,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen flex flex-col">
         <Providers>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <ElevenLabsWidget />
+          <MarketingLayout>{children}</MarketingLayout>
         </Providers>
       </body>
     </html>
