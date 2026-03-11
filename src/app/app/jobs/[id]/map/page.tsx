@@ -36,12 +36,12 @@ export default function MapPage() {
         const supabase = createClient();
         const { data: job } = await supabase
           .from("jobs")
-          .select("property_address, property_city, property_state, property_zip, roof_boundary")
+          .select("property_address, city, state, zip, roof_boundary")
           .eq("id", jobId)
           .single();
 
         if (job) {
-          const parts = [job.property_address, job.property_city, job.property_state, job.property_zip].filter(Boolean);
+          const parts = [job.property_address, job.city, job.state, job.zip].filter(Boolean);
           const fullAddress = parts.join(", ");
           setJobAddress(fullAddress || null);
 

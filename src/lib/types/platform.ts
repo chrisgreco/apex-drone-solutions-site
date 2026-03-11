@@ -1,18 +1,20 @@
 // ─── Enums ─────────────────────────────────────────────────
 
 export const JOB_TYPES = [
-  "insurance",
-  "roofing",
-  "pre_storm",
-  "post_storm",
+  "roof_inspection",
+  "property_survey",
+  "storm_damage",
+  "insurance_claim",
+  "maintenance",
 ] as const;
 export type JobType = (typeof JOB_TYPES)[number];
 
 export const JOB_TYPE_LABELS: Record<JobType, string> = {
-  insurance: "Insurance Claim",
-  roofing: "Roofing Inspection",
-  pre_storm: "Pre-Storm Survey",
-  post_storm: "Post-Storm Assessment",
+  roof_inspection: "Roof Inspection",
+  property_survey: "Property Survey",
+  storm_damage: "Storm Damage",
+  insurance_claim: "Insurance Claim",
+  maintenance: "Maintenance",
 };
 
 export const JOB_STATUSES = [
@@ -24,7 +26,7 @@ export const JOB_STATUSES = [
   "review",
   "report_ready",
   "complete",
-  "cancelled",
+  "archived",
 ] as const;
 export type JobStatus = (typeof JOB_STATUSES)[number];
 
@@ -37,7 +39,7 @@ export const JOB_STATUS_LABELS: Record<JobStatus, string> = {
   review: "In Review",
   report_ready: "Report Ready",
   complete: "Complete",
-  cancelled: "Cancelled",
+  archived: "Archived",
 };
 
 export const JOB_STATUS_COLORS: Record<JobStatus, string> = {
@@ -49,7 +51,7 @@ export const JOB_STATUS_COLORS: Record<JobStatus, string> = {
   review: "bg-yellow-100 text-yellow-700",
   report_ready: "bg-success-100 text-success-500",
   complete: "bg-success-100 text-success-500",
-  cancelled: "bg-neutral-100 text-neutral-400",
+  archived: "bg-neutral-100 text-neutral-400",
 };
 
 export const PRIORITIES = ["low", "normal", "high", "urgent"] as const;
@@ -109,22 +111,22 @@ export interface Organization {
 
 export interface Job {
   id: string;
-  org_id: string;
+  organization_id: string | null;
   created_by: string;
-  assigned_pilot: string | null;
   claim_number: string | null;
+  policy_number: string | null;
+  carrier: string | null;
   job_type: JobType;
   property_address: string;
-  property_city: string | null;
-  property_state: string | null;
-  property_zip: string | null;
-  lat: number | null;
-  lng: number | null;
+  city: string | null;
+  state: string | null;
+  zip: string | null;
+  latitude: number | null;
+  longitude: number | null;
   roof_boundary: Record<string, unknown> | null;
   status: JobStatus;
   priority: Priority;
   notes: string | null;
-  due_date: string | null;
   created_at: string;
   updated_at: string;
 }

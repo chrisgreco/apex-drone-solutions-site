@@ -25,24 +25,15 @@ export default function NewJobPage() {
       return;
     }
 
-    // Get org_id from org_members
-    const { data: membership } = await supabase
-      .from("org_members")
-      .select("org_id")
-      .eq("user_id", user.id)
-      .limit(1)
-      .single();
-
     const { data: job, error: insertError } = await supabase
       .from("jobs")
       .insert({
-        org_id: membership?.org_id || user.id, // fallback for users without org
         created_by: user.id,
         job_type: form.get("job_type") as JobType,
         property_address: form.get("property_address") as string,
-        property_city: form.get("property_city") as string || null,
-        property_state: form.get("property_state") as string || null,
-        property_zip: form.get("property_zip") as string || null,
+        city: form.get("property_city") as string || null,
+        state: form.get("property_state") as string || null,
+        zip: form.get("property_zip") as string || null,
         claim_number: form.get("claim_number") as string || null,
         priority: form.get("priority") as Priority,
         notes: form.get("notes") as string || null,

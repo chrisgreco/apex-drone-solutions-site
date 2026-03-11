@@ -24,9 +24,9 @@ export default async function JobOverviewPage({ params }: { params: Promise<{ id
       <div className="flex items-start justify-between mb-6">
         <div>
           <h1 className="text-xl font-bold text-primary-900">{typedJob.property_address}</h1>
-          {typedJob.property_city && (
+          {typedJob.city && (
             <p className="text-sm text-neutral-500 mt-0.5">
-              {typedJob.property_city}, {typedJob.property_state} {typedJob.property_zip}
+              {typedJob.city}, {typedJob.state} {typedJob.zip}
             </p>
           )}
         </div>
@@ -54,12 +54,6 @@ export default async function JobOverviewPage({ params }: { params: Promise<{ id
               <dt className="text-neutral-500">Created</dt>
               <dd className="font-medium text-neutral-900">{format(new Date(typedJob.created_at), "MMM d, yyyy")}</dd>
             </div>
-            {typedJob.due_date && (
-              <div className="flex justify-between">
-                <dt className="text-neutral-500">Due</dt>
-                <dd className="font-medium text-neutral-900">{format(new Date(typedJob.due_date), "MMM d, yyyy")}</dd>
-              </div>
-            )}
           </dl>
         </div>
 
