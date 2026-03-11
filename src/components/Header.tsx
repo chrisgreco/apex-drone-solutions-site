@@ -35,6 +35,12 @@ export function Header() {
               {item.label}
             </Link>
           ))}
+          <Link
+            href="/app/login"
+            className="text-[0.8125rem] font-medium text-accent-600 hover:text-accent-700 transition-colors"
+          >
+            Sign In
+          </Link>
           <Link href="/contact" className="btn-primary text-sm !py-2 !px-5">
             Talk to Sales
           </Link>
@@ -73,6 +79,13 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
+            <Link
+              href="/app/login"
+              className="text-sm font-medium text-accent-600 py-2 hover:text-accent-700"
+              onClick={() => setMobileOpen(false)}
+            >
+              Sign In
+            </Link>
             <Link href="/contact" className="btn-primary text-sm mt-2" onClick={() => setMobileOpen(false)}>
               Talk to Sales
             </Link>
