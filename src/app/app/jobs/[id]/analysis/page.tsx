@@ -179,9 +179,9 @@ export default function AnalysisPage() {
   const highSeverity = findings.filter(
     (f) => f.severity === "high" || f.severity === "critical"
   ).length;
-  const imagesAnalyzed = analysis?.total_images ?? 0;
-  const avgConfidence = analysis?.confidence_avg
-    ? Math.round(analysis.confidence_avg * 100)
+  const imagesAnalyzed = analysis?.summary?.images_analyzed ?? 0;
+  const avgConfidence = analysis?.summary?.avg_confidence
+    ? Math.round(analysis.summary.avg_confidence * 100)
     : totalFindings > 0
       ? Math.round(
           (findings.reduce((s, f) => s + f.confidence, 0) / totalFindings) * 100

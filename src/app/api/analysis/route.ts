@@ -198,13 +198,11 @@ export async function POST(request: NextRequest) {
       .from("analysis_jobs")
       .insert({
         job_id: jobId,
-        triggered_by: user.id,
         status: "processing",
         model_version: process.env.ANTHROPIC_API_KEY
           ? "claude-sonnet-4-20250514"
           : "mock-v1",
         started_at: new Date().toISOString(),
-        total_images: images.length,
       })
       .select()
       .single();
@@ -222,16 +220,13 @@ export async function POST(request: NextRequest) {
     const useMock = !process.env.ANTHROPIC_API_KEY;
     let allFindings: {
       analysis_job_id: string;
-      job_image_id: string;
+      job_id: string;
+      image_id: string;
       damage_type: DamageType;
       severity: Severity;
       confidence: number;
-      bbox_x: number | null;
-      bbox_y: number | null;
-      bbox_w: number | null;
-      bbox_h: number | null;
+      bounding_box: { x: number; y: number; width: number; height: number } | null;
       notes: string | null;
-      reviewed: boolean;
     }[] = [];
 
     if (useMock) {
@@ -244,16 +239,15 @@ export async function POST(request: NextRequest) {
         for (const finding of result.findings) {
           allFindings.push({
             analysis_job_id: analysisJob.id,
-            job_image_id: result.imageId,
+            job_id: jobId,
+            image_id: result.imageId,
             damage_type: finding.damage_type,
             severity: finding.severity,
             confidence: finding.confidence,
-            bbox_x: finding.bounding_box?.x ?? null,
-            bbox_y: finding.bounding_box?.y ?? null,
-            bbox_w: finding.bounding_box?.w ?? null,
-            bbox_h: finding.bounding_box?.h ?? null,
+            bounding_box: finding.bounding_box
+              ? { x: finding.bounding_box.x, y: finding.bounding_box.y, width: finding.bounding_box.w, height: finding.bounding_box.h }
+              : null,
             notes: finding.description,
-            reviewed: false,
           });
         }
       }
@@ -295,33 +289,22 @@ export async function POST(request: NextRequest) {
             mimeType
           );
 
-          // Update image analysis status
-          await supabase
-            .from("job_images")
-            .update({ analysis_status: "complete" })
-            .eq("id", image.id);
-
           for (const finding of findings) {
             allFindings.push({
               analysis_job_id: analysisJob.id,
-              job_image_id: image.id,
+              job_id: jobId,
+              image_id: image.id,
               damage_type: finding.damage_type,
               severity: finding.severity,
               confidence: finding.confidence,
-              bbox_x: finding.bounding_box?.x ?? null,
-              bbox_y: finding.bounding_box?.y ?? null,
-              bbox_w: finding.bounding_box?.w ?? null,
-              bbox_h: finding.bounding_box?.h ?? null,
+              bounding_box: finding.bounding_box
+                ? { x: finding.bounding_box.x, y: finding.bounding_box.y, width: finding.bounding_box.w, height: finding.bounding_box.h }
+                : null,
               notes: finding.description,
-              reviewed: false,
             });
           }
         } catch (err) {
           console.error(`Error analyzing image ${image.id}:`, err);
-          await supabase
-            .from("job_images")
-            .update({ analysis_status: "failed" })
-            .eq("id", image.id);
         }
       }
     }
@@ -338,7 +321,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Calculate stats
-    const flaggedImages = new Set(allFindings.map((f) => f.job_image_id)).size;
+    const flaggedImages = new Set(allFindings.map((f) => f.image_id)).size;
     const confidenceAvg =
       allFindings.length > 0
         ? allFindings.reduce((sum, f) => sum + f.confidence, 0) /
@@ -351,10 +334,14 @@ export async function POST(request: NextRequest) {
       .update({
         status: "complete",
         completed_at: new Date().toISOString(),
-        flagged_images: flaggedImages,
-        confidence_avg: confidenceAvg
-          ? parseFloat(confidenceAvg.toFixed(2))
-          : null,
+        summary: {
+          total_findings: allFindings.length,
+          images_analyzed: images.length,
+          flagged_images: flaggedImages,
+          avg_confidence: confidenceAvg
+            ? parseFloat(confidenceAvg.toFixed(2))
+            : null,
+        },
       })
       .eq("id", analysisJob.id);
 

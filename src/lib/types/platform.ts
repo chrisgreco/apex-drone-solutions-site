@@ -153,64 +153,51 @@ export interface JobImage {
 export interface AnalysisJob {
   id: string;
   job_id: string;
-  triggered_by: string;
   status: "queued" | "processing" | "complete" | "failed";
   model_version: string | null;
   started_at: string | null;
   completed_at: string | null;
   error_message: string | null;
-  total_images: number | null;
-  flagged_images: number | null;
-  confidence_avg: number | null;
+  summary: {
+    total_findings: number;
+    images_analyzed: number;
+    flagged_images: number;
+    avg_confidence: number | null;
+  } | null;
   created_at: string;
-  updated_at: string;
 }
 
 export interface DamageFinding {
   id: string;
   analysis_job_id: string;
-  job_image_id: string;
+  job_id: string;
+  image_id: string | null;
   damage_type: DamageType;
   severity: Severity;
   confidence: number;
-  bbox_x: number | null;
-  bbox_y: number | null;
-  bbox_w: number | null;
-  bbox_h: number | null;
-  polygon_points: number[][] | null;
+  bounding_box: { x: number; y: number; width: number; height: number } | null;
+  location_on_roof: { lat: number; lng: number } | null;
   notes: string | null;
-  reviewed: boolean;
-  reviewer_id: string | null;
   created_at: string;
 }
 
 export interface RoofModel {
   id: string;
   job_id: string;
-  analysis_job_id: string | null;
-  glb_path: string | null;
-  thumbnail_path: string | null;
-  pointcloud_path: string | null;
-  total_area_sqft: number | null;
-  ridge_length_ft: number | null;
-  eave_length_ft: number | null;
-  valley_length_ft: number | null;
-  hip_length_ft: number | null;
-  pitch_data: { slope_name: string; pitch: string; area_sqft: number }[] | null;
+  storage_path: string;
+  format: "glb" | "gltf" | "obj";
+  roof_area_sqft: number | null;
+  primary_pitch: string | null;
+  metadata: Record<string, unknown> | null;
   created_at: string;
 }
 
 export interface Report {
   id: string;
   job_id: string;
-  generated_by: string;
-  analysis_job_id: string | null;
-  status: "generating" | "ready" | "failed";
-  pdf_path: string | null;
-  html_path: string | null;
-  xactimate_path: string | null;
-  report_type: "standard" | "summary" | "xactimate";
-  version: number;
+  format: "pdf" | "html" | "esx";
+  storage_path: string | null;
+  generated_by: string | null;
+  metadata: Record<string, unknown> | null;
   created_at: string;
-  updated_at: string;
 }
