@@ -165,7 +165,7 @@ create table public.damage_findings (
   job_id uuid not null references public.jobs(id) on delete cascade,
   image_id uuid references public.job_images(id),
   damage_type text not null
-    check (damage_type in ('hail', 'wind', 'granule_loss', 'missing_shingle', 'crack', 'ponding', 'flashing', 'debris', 'other')),
+    check (damage_type in ('hail', 'wind', 'impact', 'granule_loss', 'cracking', 'missing_shingle', 'flashing_damage', 'ponding', 'debris', 'mechanical', 'other')),
   severity text not null default 'medium'
     check (severity in ('low', 'medium', 'high', 'critical')),
   confidence double precision not null check (confidence >= 0 and confidence <= 1),

@@ -2,22 +2,44 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { useParams } from "next/navigation";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 interface UploadedFile {
   name: string;
   size: number;
   progress: number;
   status: "uploading" | "complete" | "error";
-  url?: string;
+  storagePath?: string;
+}
+
+interface DbImage {
+  id: string;
+  original_filename: string;
+  file_size: number;
+  storage_path: string;
+  created_at: string;
 }
 
 export default function UploadPage() {
   const params = useParams();
   const jobId = params.id as string;
   const [files, setFiles] = useState<UploadedFile[]>([]);
+  const [existingImages, setExistingImages] = useState<DbImage[]>([]);
   const [dragActive, setDragActive] = useState(false);
   const supabase = createClient();
+
+  // Load existing images for this job
+  useEffect(() => {
+    async function loadImages() {
+      const { data } = await supabase
+        .from("job_images")
+        .select("id, original_filename, file_size, storage_path, created_at")
+        .eq("job_id", jobId)
+        .order("created_at", { ascending: false });
+      if (data) setExistingImages(data);
+    }
+    loadImages();
+  }, [jobId, supabase]);
 
   const handleFiles = useCallback(async (fileList: FileList) => {
     const newFiles = Array.from(fileList).filter((f) => f.type.startsWith("image/"));
@@ -32,18 +54,37 @@ export default function UploadPage() {
       setFiles((prev) => [...prev, entry]);
 
       try {
-        const path = `jobs/${jobId}/images/${crypto.randomUUID()}-${file.name}`;
+        const storagePath = `jobs/${jobId}/images/${crypto.randomUUID()}-${file.name}`;
         const { error } = await supabase.storage
           .from("job-images")
-          .upload(path, file);
+          .upload(storagePath, file);
 
         if (error) throw error;
 
+        // Also insert a record into job_images table
+        const { error: dbError } = await supabase.from("job_images").insert({
+          job_id: jobId,
+          storage_path: storagePath,
+          original_filename: file.name,
+          file_size: file.size,
+          mime_type: file.type,
+          image_type: "aerial",
+        });
+
+        if (dbError) console.error("Failed to save image record:", dbError);
+
         setFiles((prev) =>
           prev.map((f) =>
-            f.name === file.name ? { ...f, progress: 100, status: "complete" } : f,
+            f.name === file.name ? { ...f, progress: 100, status: "complete", storagePath } : f,
           ),
         );
+
+        // Update job status to 'uploading' if it's still in 'setup'
+        await supabase
+          .from("jobs")
+          .update({ status: "uploading" })
+          .eq("id", jobId)
+          .in("status", ["setup", "ready_to_fly"]);
       } catch {
         setFiles((prev) =>
           prev.map((f) =>
@@ -52,7 +93,7 @@ export default function UploadPage() {
         );
       }
     }
-  }, [jobId, supabase.storage]);
+  }, [jobId, supabase]);
 
   function handleDrop(e: React.DragEvent) {
     e.preventDefault();
@@ -97,9 +138,12 @@ export default function UploadPage() {
         <p className="text-xs text-neutral-400 mt-1">JPG, PNG, TIFF up to 50MB each</p>
       </div>
 
-      {/* File list */}
+      {/* Current upload list */}
       {files.length > 0 && (
         <div className="mt-6 bg-white border border-neutral-200 rounded-xl divide-y divide-neutral-100">
+          <div className="px-5 py-3">
+            <h3 className="text-sm font-semibold text-primary-900">Current Uploads</h3>
+          </div>
           {files.map((file, i) => (
             <div key={i} className="px-5 py-3 flex items-center justify-between">
               <div className="flex items-center gap-3 min-w-0">
@@ -108,7 +152,7 @@ export default function UploadPage() {
                   file.status === "error" ? "bg-red-100 text-red-500" :
                   "bg-accent-100 text-accent-500"
                 }`}>
-                  {file.status === "complete" ? "✓" : file.status === "error" ? "!" : "↑"}
+                  {file.status === "complete" ? "\u2713" : file.status === "error" ? "!" : "\u2191"}
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-neutral-900 truncate">{file.name}</p>
@@ -121,6 +165,32 @@ export default function UploadPage() {
                 "text-accent-500"
               }`}>
                 {file.status === "complete" ? "Uploaded" : file.status === "error" ? "Failed" : "Uploading..."}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Previously uploaded images */}
+      {existingImages.length > 0 && (
+        <div className="mt-6 bg-white border border-neutral-200 rounded-xl divide-y divide-neutral-100">
+          <div className="px-5 py-3 flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-primary-900">Uploaded Images</h3>
+            <span className="text-xs text-neutral-400">{existingImages.length} image{existingImages.length !== 1 ? "s" : ""}</span>
+          </div>
+          {existingImages.map((img) => (
+            <div key={img.id} className="px-5 py-3 flex items-center justify-between">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-8 h-8 rounded-lg bg-success-100 text-success-500 flex items-center justify-center text-xs font-bold">
+                  {"\u2713"}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-neutral-900 truncate">{img.original_filename}</p>
+                  <p className="text-xs text-neutral-400">{(img.file_size / 1024 / 1024).toFixed(1)} MB</p>
+                </div>
+              </div>
+              <span className="text-xs text-neutral-400">
+                {new Date(img.created_at).toLocaleDateString()}
               </span>
             </div>
           ))}
