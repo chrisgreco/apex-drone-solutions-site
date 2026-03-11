@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createServiceClient } from "@supabase/supabase-js";
 import Anthropic from "@anthropic-ai/sdk";
 import type { DamageType, Severity } from "@/lib/types/platform";
 
@@ -143,16 +144,23 @@ Guidelines:
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const userClient = await createClient();
 
     // Verify auth
     const {
       data: { user },
       error: authError,
-    } = await supabase.auth.getUser();
+    } = await userClient.auth.getUser();
     if (authError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    // Use service role client for DB operations (bypasses RLS)
+    const supabase = createServiceClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      { auth: { autoRefreshToken: false, persistSession: false } },
+    );
 
     const { jobId } = await request.json();
     if (!jobId) {
