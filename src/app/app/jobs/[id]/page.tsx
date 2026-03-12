@@ -4,6 +4,7 @@ import { JobStatusBadge } from "@/components/platform/jobs/JobStatusBadge";
 import { JOB_TYPE_LABELS, type Job } from "@/lib/types/platform";
 import { format } from "date-fns";
 import Link from "next/link";
+import PropertyMap from "@/components/platform/maps/PropertyMap";
 
 export default async function JobOverviewPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -70,9 +71,11 @@ export default async function JobOverviewPage({ params }: { params: Promise<{ id
                   href={`/app/jobs/${id}/map`}
                   active
                 />
-                <StepCard step="2" title="Upload Images" desc="Upload drone imagery" href={`/app/jobs/${id}/upload`} />
-                <StepCard step="3" title="Run Analysis" desc="AI damage detection" href={`/app/jobs/${id}/analysis`} />
-                <StepCard step="4" title="Generate Report" desc="Create the final report" href={`/app/jobs/${id}/report`} />
+                <StepCard step="2" title="Plan Flight" desc="Generate drone waypoints" href={`/app/jobs/${id}/flight-plan`} />
+                <StepCard step="3" title="Upload Images" desc="Upload drone imagery" href={`/app/jobs/${id}/upload`} />
+                <StepCard step="4" title="Run Analysis" desc="AI damage detection" href={`/app/jobs/${id}/analysis`} />
+                <StepCard step="5" title="Measurements" desc="Roof area and materials" href={`/app/jobs/${id}/measurements`} />
+                <StepCard step="6" title="Generate Report" desc="PDF and Xactimate export" href={`/app/jobs/${id}/report`} />
               </>
             )}
             {typedJob.status === "ready_to_fly" && (
@@ -89,6 +92,27 @@ export default async function JobOverviewPage({ params }: { params: Promise<{ id
             )}
           </div>
         </div>
+      </div>
+
+      {/* Property Map */}
+      <div className="bg-white border border-neutral-200 rounded-xl overflow-hidden mt-6">
+        <div className="px-5 py-4 border-b border-neutral-100 flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-primary-900">Property Location</h2>
+          <Link
+            href={`/app/jobs/${id}/map`}
+            className="text-xs text-accent-500 hover:text-accent-600 font-medium"
+          >
+            Edit Boundary &rarr;
+          </Link>
+        </div>
+        <PropertyMap
+          address={[typedJob.property_address, typedJob.city, typedJob.state, typedJob.zip].filter(Boolean).join(", ")}
+          boundary={
+            typedJob.roof_boundary && Array.isArray(typedJob.roof_boundary) && typedJob.roof_boundary.length >= 3
+              ? (typedJob.roof_boundary as [number, number][])
+              : undefined
+          }
+        />
       </div>
 
       {/* Notes */}

@@ -3,6 +3,18 @@
 import { useParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import type { AnalysisJob, DamageFinding, DamageType, Severity } from "@/lib/types/platform";
+import dynamic from "next/dynamic";
+import type { MapMarker } from "@/components/platform/maps/MapPreview";
+import { createClient } from "@/lib/supabase/client";
+
+const MapPreview = dynamic(() => import("@/components/platform/maps/MapPreview"), {
+  ssr: false,
+  loading: () => (
+    <div className="aspect-video bg-neutral-100 rounded-xl animate-pulse flex items-center justify-center">
+      <p className="text-xs text-neutral-400">Loading map...</p>
+    </div>
+  ),
+});
 
 // ─── Helpers ────────────────────────────────────────────────
 
@@ -74,6 +86,29 @@ export default function AnalysisPage() {
   const [analysis, setAnalysis] = useState<AnalysisJob | null>(null);
   const [findings, setFindings] = useState<DamageFinding[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [jobAddress, setJobAddress] = useState<string>("");
+  const [roofBoundary, setRoofBoundary] = useState<[number, number][] | undefined>();
+
+  // Load job data for map
+  useEffect(() => {
+    async function loadJobData() {
+      const supabase = createClient();
+      const { data: job } = await supabase
+        .from("jobs")
+        .select("property_address, city, state, zip, roof_boundary")
+        .eq("id", jobId)
+        .single();
+      if (job) {
+        setJobAddress(
+          [job.property_address, job.city, job.state, job.zip].filter(Boolean).join(", ")
+        );
+        if (job.roof_boundary && Array.isArray(job.roof_boundary) && job.roof_boundary.length >= 3) {
+          setRoofBoundary(job.roof_boundary as [number, number][]);
+        }
+      }
+    }
+    loadJobData();
+  }, [jobId]);
 
   // Fetch existing analysis on mount
   const fetchAnalysis = useCallback(async () => {
@@ -404,36 +439,34 @@ export default function AnalysisPage() {
             </div>
           )}
 
-          {/* 3D Model placeholder */}
+          {/* Damage Findings Map */}
           <div className="bg-white border border-neutral-200 rounded-xl overflow-hidden">
             <div className="px-5 py-4 border-b border-neutral-100">
               <h3 className="text-sm font-semibold text-primary-900">
-                3D Roof Model
+                Findings Map
               </h3>
+              <p className="text-xs text-neutral-400 mt-0.5">
+                Damage locations plotted on satellite imagery
+              </p>
             </div>
-            <div className="aspect-video bg-neutral-900 flex items-center justify-center">
-              <div className="text-center">
-                <svg
-                  className="w-12 h-12 text-neutral-600 mx-auto mb-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21 7.5l-2.25-1.313M21 7.5v2.25m0-2.25l-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3l2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75l2.25-1.313M12 21.75V15m0 0l-2.25 1.313"
-                  />
-                </svg>
-                <p className="text-sm text-neutral-500">
-                  3D roof model will render here
-                </p>
-                <p className="text-xs text-neutral-600 mt-1">
-                  Three.js GLB viewer -- available after photogrammetry
-                </p>
-              </div>
-            </div>
+            <MapPreview
+              address={jobAddress}
+              boundary={roofBoundary}
+              markers={findings
+                .filter((f) => f.location_on_roof?.lat && f.location_on_roof?.lng)
+                .map((f): MapMarker => ({
+                  lng: f.location_on_roof!.lng,
+                  lat: f.location_on_roof!.lat,
+                  color:
+                    f.severity === "critical" ? "#dc2626" :
+                    f.severity === "high" ? "#ea580c" :
+                    f.severity === "medium" ? "#eab308" : "#6b7280",
+                  label: DAMAGE_TYPE_LABELS[f.damage_type] || f.damage_type,
+                  popup: `${f.severity} severity &middot; ${Math.round(f.confidence * 100)}% confidence${f.notes ? `<br/>${f.notes}` : ""}`,
+                }))}
+              heightClass="h-[400px]"
+              interactive
+            />
           </div>
         </div>
       )}

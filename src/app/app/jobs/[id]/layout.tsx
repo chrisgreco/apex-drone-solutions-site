@@ -7,8 +7,10 @@ import { cn } from "@/lib/utils";
 const tabs = [
   { label: "Overview", segment: "" },
   { label: "Map", segment: "/map" },
+  { label: "Flight Plan", segment: "/flight-plan" },
   { label: "Upload", segment: "/upload" },
   { label: "Analysis", segment: "/analysis" },
+  { label: "Measurements", segment: "/measurements" },
   { label: "Report", segment: "/report" },
 ];
 
@@ -20,8 +22,8 @@ export default function JobDetailLayout({ children }: { children: React.ReactNod
   return (
     <div>
       {/* Tab bar */}
-      <div className="border-b border-neutral-200 bg-white px-6">
-        <nav className="flex gap-1 -mb-px">
+      <div className="border-b border-neutral-200 bg-white px-6 overflow-x-auto">
+        <nav className="flex gap-1 -mb-px min-w-max">
           {tabs.map((tab) => {
             const href = basePath + tab.segment;
             const isActive = tab.segment === ""

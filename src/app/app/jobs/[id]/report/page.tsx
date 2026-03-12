@@ -3,11 +3,25 @@
 import { createClient } from "@/lib/supabase/client";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+import { generatePDFReport } from "@/lib/exports/pdf-report";
+import { generateESXFile } from "@/lib/exports/xactimate-esx";
+import * as turf from "@turf/turf";
+
+const MapPreview = dynamic(() => import("@/components/platform/maps/MapPreview"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[300px] bg-neutral-100 rounded-xl animate-pulse flex items-center justify-center">
+      <p className="text-xs text-neutral-400">Loading map...</p>
+    </div>
+  ),
+});
 
 interface Finding {
   damage_type: string;
   severity: string;
   confidence: number;
+  notes?: string | null;
 }
 
 interface JobData {
@@ -16,6 +30,7 @@ interface JobData {
   state: string | null;
   zip: string | null;
   created_at: string;
+  roof_boundary: [number, number][] | null;
 }
 
 const DAMAGE_LABELS: Record<string, string> = {
@@ -46,7 +61,7 @@ export default function ReportPage() {
       // Load job data
       const { data: jobData } = await supabase
         .from("jobs")
-        .select("property_address, city, state, zip, created_at")
+        .select("property_address, city, state, zip, created_at, roof_boundary")
         .eq("id", jobId)
         .single();
       if (jobData) setJob(jobData);
@@ -71,7 +86,7 @@ export default function ReportPage() {
       if (analysis) {
         const { data: findingsData } = await supabase
           .from("damage_findings")
-          .select("damage_type, severity, confidence")
+          .select("damage_type, severity, confidence, notes")
           .eq("analysis_job_id", analysis.id);
         if (findingsData) setFindings(findingsData);
 
@@ -133,6 +148,63 @@ export default function ReportPage() {
   const address = job
     ? `${job.property_address}${job.city ? `, ${job.city}` : ""}${job.state ? `, ${job.state}` : ""} ${job.zip || ""}`
     : "Loading...";
+
+  // Calculate measurements from boundary if available
+  const measurements = job?.roof_boundary && Array.isArray(job.roof_boundary) && job.roof_boundary.length >= 3
+    ? (() => {
+        const b = job.roof_boundary as [number, number][];
+        const polygon = turf.polygon([[...b, b[0]]]);
+        const areaSqM = turf.area(polygon);
+        const areaSqft = Math.round(areaSqM * 10.7639);
+        let perimeterM = 0;
+        for (let i = 0; i < b.length; i++) {
+          const next = (i + 1) % b.length;
+          perimeterM += turf.distance(turf.point(b[i]), turf.point(b[next]), { units: "meters" });
+        }
+        return {
+          areaSqft,
+          perimeterFt: Math.round(perimeterM * 3.28084),
+          estimatedSquares: Math.ceil(areaSqft / 100),
+          edges: b.map((_, i) => {
+            const next = (i + 1) % b.length;
+            return { lengthFt: Math.round(turf.distance(turf.point(b[i]), turf.point(b[next]), { units: "meters" }) * 3.28084 * 10) / 10 };
+          }),
+        };
+      })()
+    : null;
+
+  function handleDownloadPDF() {
+    if (!job) return;
+    const doc = generatePDFReport({
+      jobId,
+      address,
+      inspectionDate: new Date(job.created_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
+      imageCount,
+      findings,
+      measurements,
+    });
+    doc.save(`inspection-report-${jobId.slice(0, 8)}.pdf`);
+  }
+
+  async function handleDownloadESX() {
+    if (!job) return;
+    const blob = await generateESXFile({
+      jobId,
+      address: job.property_address,
+      city: job.city || "",
+      state: job.state || "",
+      zip: job.zip || "",
+      inspectionDate: new Date(job.created_at).toISOString().split("T")[0],
+      findings,
+      measurements,
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `xactimate-${jobId.slice(0, 8)}.esx`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 
   return (
     <div className="p-6 lg:p-8 max-w-4xl">
@@ -213,6 +285,45 @@ export default function ReportPage() {
                 </div>
               </div>
 
+              {/* Property Satellite Map */}
+              <div className="border-t border-neutral-100 pt-6">
+                <h4 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-3">Property Overview</h4>
+                <MapPreview
+                  address={address}
+                  boundary={
+                    job?.roof_boundary && Array.isArray(job.roof_boundary) && job.roof_boundary.length >= 3
+                      ? (job.roof_boundary as [number, number][])
+                      : undefined
+                  }
+                  heightClass="h-[300px]"
+                />
+              </div>
+
+              {/* Roof Measurements */}
+              {measurements && (
+                <div className="border-t border-neutral-100 pt-6">
+                  <h4 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-2">Roof Measurements</h4>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div className="bg-neutral-50 rounded-lg p-3 text-center">
+                      <p className="text-xl font-bold text-primary-900">{measurements.areaSqft.toLocaleString()}</p>
+                      <p className="text-xs text-neutral-500 mt-0.5">sqft</p>
+                    </div>
+                    <div className="bg-neutral-50 rounded-lg p-3 text-center">
+                      <p className="text-xl font-bold text-primary-900">{measurements.perimeterFt.toLocaleString()}</p>
+                      <p className="text-xs text-neutral-500 mt-0.5">ft perimeter</p>
+                    </div>
+                    <div className="bg-neutral-50 rounded-lg p-3 text-center">
+                      <p className="text-xl font-bold text-accent-600">{measurements.estimatedSquares}</p>
+                      <p className="text-xs text-neutral-500 mt-0.5">roofing squares</p>
+                    </div>
+                    <div className="bg-neutral-50 rounded-lg p-3 text-center">
+                      <p className="text-xl font-bold text-primary-900">{measurements.edges.length}</p>
+                      <p className="text-xs text-neutral-500 mt-0.5">edges</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="border-t border-neutral-100 pt-6">
                 <h4 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-2">Damage Summary</h4>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -230,16 +341,16 @@ export default function ReportPage() {
           <div className="bg-white border border-neutral-200 rounded-xl p-5">
             <h3 className="text-sm font-semibold text-primary-900 mb-4">Export</h3>
             <div className="flex flex-wrap gap-3">
-              <button className="btn-primary text-sm">
+              <button onClick={handleDownloadPDF} className="btn-primary text-sm inline-flex items-center gap-2">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                 </svg>
                 Download PDF
               </button>
-              <button className="btn-secondary text-sm">
-                HTML Report
-              </button>
-              <button className="btn-secondary text-sm">
+              <button onClick={handleDownloadESX} className="btn-secondary text-sm inline-flex items-center gap-2">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                </svg>
                 Xactimate Export (.ESX)
               </button>
             </div>
