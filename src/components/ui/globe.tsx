@@ -24,16 +24,18 @@ export function Globe({ className }: { className?: string }) {
 
     let phi = 0;
     let width = canvasRef.current.offsetWidth;
+    const isMobile = width < 400;
+    const dpr = Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2);
 
     const globe = createGlobe(canvasRef.current, {
-      width: width * 2,
-      height: width * 2,
-      devicePixelRatio: 2,
+      width: width * dpr,
+      height: width * dpr,
+      devicePixelRatio: dpr,
       phi: 0,
       theta: 0.25,
       dark: 1,
       diffuse: 1.2,
-      mapSamples: 20000,
+      mapSamples: isMobile ? 12000 : 20000,
       mapBrightness: 6,
       baseColor: [0.06, 0.14, 0.1],
       markerColor: [0.3, 0.69, 0.31],
@@ -41,27 +43,30 @@ export function Globe({ className }: { className?: string }) {
       markers: NJ_FARM_MARKERS,
     });
 
-    // Auto-rotate
-    const interval = setInterval(() => {
-      phi += 0.003;
-      globe.update({ phi, width: width * 2, height: width * 2 });
-    }, 1000 / 30);
+    // Auto-rotate — smooth at ~30fps
+    let animFrame: number;
+    function animate() {
+      phi += 0.008;
+      globe.update({ phi, width: width * dpr, height: width * dpr });
+      animFrame = requestAnimationFrame(animate);
+    }
+    animFrame = requestAnimationFrame(animate);
 
     // Fade in
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       if (canvasRef.current) canvasRef.current.style.opacity = "1";
-    }, 100);
+    });
 
     const onResize = () => {
       if (canvasRef.current) {
         width = canvasRef.current.offsetWidth;
-        globe.update({ width: width * 2, height: width * 2 });
+        globe.update({ width: width * dpr, height: width * dpr });
       }
     };
     window.addEventListener("resize", onResize);
 
     return () => {
-      clearInterval(interval);
+      cancelAnimationFrame(animFrame);
       globe.destroy();
       window.removeEventListener("resize", onResize);
     };
