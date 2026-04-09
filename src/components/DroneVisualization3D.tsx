@@ -56,13 +56,17 @@ export function DroneVisualization3D({
 		fill.position.set(-3, 2, -2);
 		scene.add(fill);
 
-		const accent = new THREE.PointLight(0xe8792a, 4, 12);
+		const accent = new THREE.PointLight(0x4CAF50, 4, 12);
 		accent.position.set(0, -1, 3);
 		scene.add(accent);
 
-		const rim = new THREE.PointLight(0x4488ff, 2, 10);
+		const rim = new THREE.PointLight(0x4CAF50, 2, 10);
 		rim.position.set(-2, 1, -3);
 		scene.add(rim);
+
+		const ground = new THREE.PointLight(0x4ade80, 1.5, 8);
+		ground.position.set(0, -3, 0);
+		scene.add(ground);
 
 		// Groups
 		const sceneGroup = new THREE.Group();
@@ -82,38 +86,42 @@ export function DroneVisualization3D({
 
 		// Materials
 		const bodyMat = new THREE.MeshStandardMaterial({
-			color: 0xb0b8c4,
-			metalness: 0.5,
-			roughness: 0.35,
+			color: 0x0F2419,
+			metalness: 0.7,
+			roughness: 0.2,
 		});
 		const armMat = new THREE.MeshStandardMaterial({
-			color: 0x8892a0,
-			metalness: 0.4,
-			roughness: 0.45,
+			color: 0x1B3A2D,
+			metalness: 0.5,
+			roughness: 0.3,
 		});
 		const motorMat = new THREE.MeshStandardMaterial({
-			color: 0xe8792a,
+			color: 0x4CAF50,
 			metalness: 0.6,
-			roughness: 0.25,
-			emissive: 0xe8792a,
-			emissiveIntensity: 0.15,
+			roughness: 0.2,
+			emissive: 0x4CAF50,
+			emissiveIntensity: 0.4,
 		});
 		const propMat = new THREE.MeshStandardMaterial({
-			color: 0x556677,
+			color: 0x4CAF50,
 			metalness: 0.3,
 			roughness: 0.5,
 			transparent: true,
-			opacity: 0.9,
+			opacity: 0.5,
+			emissive: 0x4CAF50,
+			emissiveIntensity: 0.1,
 		});
 		const gimbalMat = new THREE.MeshStandardMaterial({
-			color: 0x445566,
-			metalness: 0.7,
-			roughness: 0.15,
+			color: 0x0F2419,
+			metalness: 0.8,
+			roughness: 0.1,
 		});
 		const lensMat = new THREE.MeshStandardMaterial({
-			color: 0x1a1a2e,
+			color: 0x4CAF50,
 			metalness: 0.9,
 			roughness: 0.05,
+			emissive: 0x4CAF50,
+			emissiveIntensity: 0.6,
 		});
 		materials.push(bodyMat, armMat, motorMat, propMat, gimbalMat, lensMat);
 
@@ -131,8 +139,8 @@ export function DroneVisualization3D({
 		// Front indicator LED
 		const ledGeo = new THREE.SphereGeometry(0.03, 6, 4);
 		const ledMat = new THREE.MeshStandardMaterial({
-			color: 0xff4444,
-			emissive: 0xff2222,
+			color: 0x4CAF50,
+			emissive: 0x4CAF50,
 			emissiveIntensity: 2,
 		});
 		materials.push(ledMat);
@@ -187,6 +195,54 @@ export function DroneVisualization3D({
 		lens.position.set(0, -0.22, 0.18);
 		droneGroup.add(lens);
 
+		// Scan beam (green cone beneath drone)
+		const beamGeo = new THREE.ConeGeometry(1.2, 2.5, 32, 1, true);
+		const beamMat = new THREE.MeshBasicMaterial({
+			color: 0x4ade80,
+			transparent: true,
+			opacity: 0.06,
+			side: THREE.DoubleSide,
+			depthWrite: false,
+		});
+		materials.push(beamMat);
+		geometries.push(beamGeo);
+		const beam = new THREE.Mesh(beamGeo, beamMat);
+		beam.position.y = -1.6;
+		beam.rotation.x = Math.PI;
+		droneGroup.add(beam);
+
+		// Glow ring around drone
+		const ringGeo = new THREE.RingGeometry(1.8, 1.85, 64);
+		const ringMat = new THREE.MeshBasicMaterial({
+			color: 0x4CAF50,
+			transparent: true,
+			opacity: 0.15,
+			side: THREE.DoubleSide,
+			depthWrite: false,
+		});
+		materials.push(ringMat);
+		geometries.push(ringGeo);
+		const ring = new THREE.Mesh(ringGeo, ringMat);
+		ring.rotation.x = -Math.PI / 2;
+		ring.position.y = -0.05;
+		droneGroup.add(ring);
+
+		// LED strip accents on body edges
+		const stripGeo = new THREE.BoxGeometry(1.22, 0.015, 0.015);
+		const stripMat = new THREE.MeshBasicMaterial({
+			color: 0x4CAF50,
+			transparent: true,
+			opacity: 0.8,
+		});
+		materials.push(stripMat);
+		geometries.push(stripGeo);
+		const strip1 = new THREE.Mesh(stripGeo, stripMat);
+		strip1.position.set(0, -0.14, 0.35);
+		droneGroup.add(strip1);
+		const strip2 = new THREE.Mesh(stripGeo, stripMat.clone());
+		strip2.position.set(0, -0.14, -0.35);
+		droneGroup.add(strip2);
+
 		// Tilt drone slightly for a more dynamic default angle
 		droneGroup.rotation.x = -0.1;
 		droneGroup.rotation.y = 0.3;
@@ -208,6 +264,14 @@ export function DroneVisualization3D({
 			// Hover float
 			droneGroup.position.y = Math.sin(t * 1.2) * 0.08;
 			droneGroup.rotation.z = Math.sin(t * 0.8) * 0.025;
+
+			// Pulse scan beam and ring
+			beamMat.opacity = 0.04 + Math.sin(t * 2) * 0.03;
+			ringMat.opacity = 0.08 + Math.sin(t * 1.5) * 0.08;
+			ring.rotation.z = t * 0.3;
+
+			// LED pulse
+			(ledMat as THREE.MeshStandardMaterial).emissiveIntensity = 1 + Math.sin(t * 4) * 1;
 
 			// Mouse parallax
 			targetRotRef.current.x +=

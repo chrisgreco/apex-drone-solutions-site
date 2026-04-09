@@ -5,20 +5,23 @@ import { MarketingLayout } from "@/components/MarketingLayout";
 
 export const metadata: Metadata = {
   title: {
-    default: "Apex Drone Solutions | Drone-Powered Property Documentation",
-    template: "%s | Apex Drone Solutions",
+    default: "AG Drones NJ | Precision Agricultural Drone Services in New Jersey",
+    template: "%s | AG Drones NJ",
   },
   description:
-    "Drone-powered roof and property condition documentation for insurance carriers, independent adjusters, and roofing contractors. AI-driven reports, 3D models, and faster claims resolution.",
+    "Next-gen agricultural drone services for New Jersey farms. FAA Part 137 certified. 3D field mapping, precision crop spraying, NDVI analytics — cut chemical costs 30% with drone technology.",
   keywords: [
-    "drone inspection",
-    "roof documentation",
-    "insurance claims",
-    "property damage",
-    "aerial survey",
-    "roofing contractor",
-    "storm response",
-    "AI damage detection",
+    "agricultural drone spraying",
+    "crop spraying drone",
+    "drone spraying NJ",
+    "precision agriculture",
+    "New Jersey farms",
+    "drone crop application",
+    "FAA Part 137",
+    "agricultural drone services",
+    "3D field mapping",
+    "NDVI drone analytics",
+    "AG Drones NJ",
   ],
   icons: {
     icon: "/favicon.svg",

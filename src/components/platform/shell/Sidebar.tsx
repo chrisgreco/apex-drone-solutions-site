@@ -46,7 +46,7 @@ export function Sidebar() {
         <Link href="/" className="flex items-center gap-2.5">
           <LogoMark className="w-8 h-8" />
           <div>
-            <span className="text-sm font-bold tracking-tight">Apex Drone</span>
+            <span className="text-sm font-bold tracking-tight">AG Drones</span>
             <span className="block text-[10px] text-white/50 uppercase tracking-widest -mt-0.5">Platform</span>
           </div>
         </Link>

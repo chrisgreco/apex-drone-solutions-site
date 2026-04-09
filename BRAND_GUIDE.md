@@ -1,23 +1,25 @@
-# Apex Drone Solutions — Brand Guide
+# AG Drones NJ — Brand Guide
 
 ## Brand Voice
 
-- **Tone:** Clear, calm, confident. Business-first, not hypey.
-- **Audience:** Claims leaders, vendor managers, independent adjuster firm owners, roofing/restoration contractors, professional drone pilots.
+- **Tone:** Tech-forward, precise, confident. Innovation meets agriculture.
+- **Audience:** New Jersey farmers, farm managers, agricultural cooperatives, crop consultants, and tech-minded operators.
 - **Rules:**
-  - Plain English, short sentences, strong verbs.
-  - Emphasize reliability, safety, turnaround time, and workflow integration.
-  - Talk outcomes: faster claims, fewer re-inspections, better documentation.
-  - Avoid buzzwords and "AI magic" language. AI is infrastructure, not the product.
-  - Never describe our services as formal "inspections." We provide **property condition documentation**.
+  - Lead with technology and data: 3D mapping, NDVI analytics, GPS precision.
+  - Back it up with farmer outcomes: cost savings, yield protection, time savings.
+  - Emphasize precision, intelligence, certifications, and environmental benefits.
+  - Use concrete numbers: "30% less chemical use", "2cm resolution", "99.2% NDVI accuracy."
+  - Never oversell. Farmers respect honesty and data.
+  - Always mention FAA Part 137 certification — it's our competitive moat.
+  - Use monospace font for data labels and technical readouts.
 
 ## Logo
 
-The Apex mark combines a **roofline / apex triangle** with a subtle **flight path arc** and a small diamond representing a drone in flight. It communicates upward motion, precision, and field operations.
+The AG Drones NJ mark features a **hexagonal drone** with propeller arms, a central sensor eye, and scan lines beneath — communicating aerial intelligence, precision technology, and agricultural scanning.
 
-- **Full-color mark:** Deep Navy (`#102A43`) roof + Safety Orange (`#E8792A`) flight path.
-- **Monochrome:** Single-color version available in navy or white.
-- **Wordmark:** "Apex Drone" in bold weight + "SOLUTIONS" in small-caps spaced tracking below.
+- **Full-color mark:** Deep Forest (`#0F2419`) hexagon + Vibrant Green (`#4CAF50`) elements + Bright Green (`#4ade80`) scan lines.
+- **Monochrome:** Single-color version available in forest or white.
+- **Wordmark:** "AG Drones" in bold white + "NJ" in vibrant green monospace small-caps below.
 
 Files:
 - `src/components/Logo.tsx` — React components (LogoFull, LogoMark, LogoMonochrome)
@@ -25,77 +27,76 @@ Files:
 
 ## Color Palette
 
-### Primary — Deep Navy
-Used for headings, dark backgrounds, and primary text.
+### Primary — Deep Forest
+Used for backgrounds, dark UI surfaces, and text on light.
 
 | Token | Hex | Usage |
 |-------|-----|-------|
-| `primary-50` | `#f0f4f8` | Light backgrounds |
-| `primary-100` | `#d9e2ec` | Subtle borders |
-| `primary-200` | `#bcccdc` | Secondary borders |
-| `primary-300` | `#9fb3c8` | Muted text on dark bg |
-| `primary-400` | `#829ab1` | Icons on dark bg |
-| `primary-500` | `#627d98` | Secondary text |
-| `primary-600` | `#486581` | — |
-| `primary-700` | `#334e68` | — |
-| `primary-800` | `#243b53` | Dark text |
-| `primary-900` | `#102a43` | Headings, logo |
-| `primary-950` | `#0a1929` | Hero backgrounds |
+| `primary-50` | `#F0F4EC` | Light backgrounds |
+| `primary-100` | `#D0D8C8` | Subtle borders |
+| `primary-800` | `#0F2419` | Dark surfaces |
+| `primary-900` | `#0B1A12` | Main dark bg |
+| `primary-950` | `#07110C` | Deepest backgrounds |
 
-### Accent — Safety Orange
-Used for CTAs, step numbers, highlights, and the brand mark flight path.
+### Accent — Vibrant Green
+Used for highlights, interactive elements, data visualizations, and tech accents.
 
 | Token | Hex | Usage |
 |-------|-----|-------|
-| `accent-500` | `#e8792a` | Primary buttons, highlights |
-| `accent-600` | `#c45d1a` | Button hover |
-| `accent-700` | `#9e4a15` | Dark accent |
+| `accent-400` | `#66BB6A` | Primary highlights, buttons |
+| `accent-500` | `#4CAF50` | Button backgrounds |
+| `accent-600` | `#43A047` | Button hover |
 
-### Neutral — Warm Grays
+### Green — Agricultural Bright
+Used for agricultural elements, health indicators, scan lines, and success states.
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `green-400` | `#4ade80` | Health indicators, scan lines |
+| `green-500` | `#22c55e` | Badges, active states |
+| `green-600` | `#16a34a` | Section labels |
+
+### Neutral — Warm Sage Grays
 Used for body text, borders, and backgrounds.
 
 | Token | Hex | Usage |
 |-------|-----|-------|
-| `neutral-50` | `#f7f7f5` | Section backgrounds |
-| `neutral-100` | `#ededea` | Card borders |
-| `neutral-200` | `#dcdcd7` | Input borders |
-| `neutral-500` | `#7c7c72` | Body text |
-| `neutral-700` | `#454540` | Strong body text |
-| `neutral-800` | `#2d2d29` | Default text color |
+| `neutral-50` | `#F0F4EC` | Section backgrounds |
+| `neutral-500` | `#6B7A62` | Body text |
+| `neutral-800` | `#2A3026` | Default text color |
 
 ## Typography
 
-- **Font family:** Inter (loaded via system font stack fallback)
-- **Headings:** Inter Bold (700), letter-spacing -0.01em
-- **Body:** Inter Regular (400), 15px base
-- **Buttons:** Inter SemiBold (600), 15px
+- **Font family:** Montserrat (with Inter fallback)
+- **Headings:** Montserrat Bold (700), letter-spacing -0.02em
+- **Body:** Montserrat Regular (400), 15px base
+- **Data/Technical:** Monospace font for HUD labels, stats, and technical readouts
+- **Buttons:** Montserrat SemiBold (600), 15px
 
-## Components
+## Key Design Patterns
 
-### Buttons
-- **Primary (`.btn-primary`):** Accent-500 background, white text, 6px radius, semibold. Hover → accent-600.
-- **Secondary (`.btn-secondary`):** Transparent, 2px primary-200 border, primary-800 text. Hover → primary-50 fill.
+- **Dark-first:** Site defaults to dark backgrounds (primary-950, primary-900)
+- **Tech grid:** Subtle green grid lines on dark sections
+- **HUD corners:** Corner bracket accents on visualization containers
+- **Section labels:** `text-xs font-semibold tracking-[0.2em] uppercase text-accent-400 font-mono` prefixed with `//`
+- **Cards:** Dark glass with `border border-accent-500/10` and subtle glow
+- **Animations:** Scanning lines, pulsing dots, terrain visualizations
+- **Data points:** Monospace numbers with green accent suffixes
+- **Trust badges:** Pill shape with green dot indicator on dark bg
 
-### Cards
-- White background, 1px neutral-100 border, 8px radius, 28px padding
-- Icon container: 44px square, primary-50 background, primary-700 icon color
-- Title: 18px semibold primary-900
-- Body: 14px neutral-500
+## Pages
 
-### Form Inputs
-- 1px neutral-200 border, 6px radius, 10px 16px padding
-- Focus: 2px accent-500/30 ring + accent-500 border
-
-### Section Spacing
-- Desktop: 96px vertical padding
-- Mobile: 80px vertical padding
-- Max width container: 72rem (1152px)
-
-## Adding New Pages
-
-1. Create a new directory under `src/app/` with a `page.tsx` file.
-2. Export a `metadata` object for SEO (title + description).
-3. Use the `SectionHeading`, `Card`, and `StepCard` components for consistency.
-4. Follow the hero → content → CTA section pattern used across existing pages.
-5. Use `container-narrow` and `section` classes for layout.
-6. Add the page to the nav items array in `src/components/Header.tsx`.
+| Page | Path | Purpose |
+|------|------|---------|
+| Home | `/` | Hero, 3D terrain scan, services, benefits, crops, testimonials, CTA |
+| Services | `/services` | Detailed service descriptions |
+| How It Works | `/how-it-works` | Full workflow + FAQ |
+| Equipment | `/equipment` | Fleet specs (DJI T25) |
+| Coverage | `/coverage` | South Jersey service area map |
+| ROI Calculator | `/roi-calculator` | Interactive savings calculator |
+| Results | `/results` | Case studies & testimonials |
+| About | `/about` | Company story & certifications |
+| Careers | `/careers` | Pilot recruitment (veteran-focused) |
+| Contact | `/contact` | Quote request form |
+| Privacy | `/privacy` | Privacy policy |
+| Terms | `/terms` | Terms of service |
