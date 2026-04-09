@@ -125,13 +125,13 @@ export default function HomePage() {
               </FadeIn>
             </div>
 
-            {/* 3D Globe */}
+            {/* 3D Globe - desktop: beside hero, mobile: smaller below text */}
             <FadeIn delay={0.2} direction="right">
-              <div className="hidden lg:block relative">
-                <Globe className="max-w-[480px] opacity-80" />
-                {/* Floating HUD labels */}
+              <div className="relative">
+                <Globe className="max-w-[280px] lg:max-w-[480px] mx-auto lg:mx-0 opacity-70 lg:opacity-80" />
+                {/* Floating HUD labels - desktop only */}
                 <motion.div
-                  className="absolute top-16 right-8 flex items-center gap-2 px-3 py-2 bg-accent-900/60 backdrop-blur-md rounded-lg border border-accent-500/20"
+                  className="absolute top-16 right-8 hidden lg:flex items-center gap-2 px-3 py-2 bg-accent-900/60 backdrop-blur-md rounded-lg border border-accent-500/20"
                   animate={{ y: [0, -6, 0] }}
                   transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
                 >
@@ -139,7 +139,7 @@ export default function HomePage() {
                   <span className="text-xs text-white/80 font-mono">DJI T25 Fleet</span>
                 </motion.div>
                 <motion.div
-                  className="absolute bottom-28 left-4 flex items-center gap-2 px-3 py-2 bg-accent-900/60 backdrop-blur-md rounded-lg border border-accent-500/20"
+                  className="absolute bottom-28 left-4 hidden lg:flex items-center gap-2 px-3 py-2 bg-accent-900/60 backdrop-blur-md rounded-lg border border-accent-500/20"
                   animate={{ y: [0, 6, 0] }}
                   transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 0.5 }}
                 >

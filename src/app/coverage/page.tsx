@@ -156,11 +156,11 @@ export default function CoveragePage() {
 
               {/* 3D Globe */}
               <div className="flex items-center justify-center py-8">
-                <Globe className="max-w-[450px]" />
+                <Globe className="max-w-[300px] md:max-w-[450px]" />
               </div>
 
-              {/* Legend overlay */}
-              <div className="absolute bottom-4 left-4 bg-primary-950/80 backdrop-blur-sm rounded-lg p-3 border border-accent-500/10 z-10">
+              {/* Legend overlay - hidden on small screens */}
+              <div className="absolute bottom-4 left-4 hidden sm:block bg-primary-950/80 backdrop-blur-sm rounded-lg p-3 border border-accent-500/10 z-10">
                 <p className="text-[10px] font-mono text-white/40 mb-2">Service Counties</p>
                 {["Burlington", "Cumberland", "Salem", "Atlantic"].map((c) => (
                   <div key={c} className="flex items-center gap-2 mb-1">
@@ -171,9 +171,9 @@ export default function CoveragePage() {
               </div>
 
               {/* Stats badge */}
-              <div className="absolute bottom-4 right-4 bg-primary-950/80 backdrop-blur-sm rounded-lg px-4 py-2.5 border border-accent-500/10 z-10">
-                <p className="text-[10px] font-mono text-accent-400/60">
-                  277K+ ACRES &middot; DRAG TO ROTATE
+              <div className="absolute bottom-4 right-4 bg-primary-950/80 backdrop-blur-sm rounded-lg px-3 sm:px-4 py-2 sm:py-2.5 border border-accent-500/10 z-10">
+                <p className="text-[9px] sm:text-[10px] font-mono text-accent-400/60">
+                  277K+ ACRES
                 </p>
               </div>
             </div>
