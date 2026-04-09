@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/FadeIn";
 import { GridBackground } from "@/components/ui/grid-background";
+import { BackgroundBeams } from "@/components/ui/background-beams";
 import { TerrainScan } from "@/components/ui/terrain-scan";
 import {
   IconSpray,
@@ -552,6 +553,7 @@ export default function ServicesPage() {
 
       {/* CTA */}
       <section className="relative bg-primary-950 py-20 md:py-28 overflow-hidden">
+        <BackgroundBeams />
         <GridBackground />
         <div className="container-narrow mx-auto px-5 text-center relative z-10">
           <FadeIn>

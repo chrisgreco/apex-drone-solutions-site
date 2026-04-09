@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { GridBackground } from "@/components/ui/grid-background";
+import { Globe } from "@/components/ui/globe";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/FadeIn";
 import { BeamDivider } from "@/components/Beam";
 import {
@@ -134,158 +135,47 @@ export default function CoveragePage() {
 
       <BeamDivider />
 
-      {/* ─── Map ─────────────────────────────────────── */}
+      {/* ─── Interactive Globe ─────────────────────────── */}
       <section className="bg-primary-950 py-16 md:py-24">
         <div className="container-narrow mx-auto px-5">
           <FadeIn>
-            <div className="relative bg-white/[0.03] border border-accent-500/10 rounded-2xl backdrop-blur-sm overflow-hidden" style={{ minHeight: 520 }}>
-              {/* HUD corners */}
-              <div className="absolute top-0 left-0 w-6 h-6 border-l-2 border-t-2 border-accent-400/30 z-10" />
-              <div className="absolute top-0 right-0 w-6 h-6 border-r-2 border-t-2 border-accent-400/30 z-10" />
-              <div className="absolute bottom-0 left-0 w-6 h-6 border-l-2 border-b-2 border-accent-400/30 z-10" />
-              <div className="absolute bottom-0 right-0 w-6 h-6 border-r-2 border-b-2 border-accent-400/30 z-10" />
-
+            <div className="relative bg-white/[0.03] border border-accent-500/10 rounded-2xl backdrop-blur-sm overflow-hidden hud-corners" style={{ minHeight: 520 }}>
               {/* Top HUD bar */}
-              <div className="absolute top-3 left-1/2 -translate-x-1/2 flex items-center gap-4 text-[10px] font-mono text-accent-400/50 z-10">
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-4 text-[10px] font-mono text-accent-400/50 z-10">
                 <motion.span
                   animate={{ opacity: [0.3, 0.8, 0.3] }}
                   transition={{ repeat: Infinity, duration: 2 }}
                 >
-                  MAP ONLINE
+                  GLOBE ONLINE
                 </motion.span>
                 <span className="w-1 h-1 rounded-full bg-accent-400/40" />
-                <span>PROJ: NAD83</span>
+                <span>SECTORS: 4</span>
                 <span className="w-1 h-1 rounded-full bg-accent-400/40" />
-                <span>ZOOM: 8x</span>
+                <span>FARMS: 10K+</span>
               </div>
 
-              {/* NJ SVG Map */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative" style={{ width: 320, height: 440 }}>
-                  <svg
-                    viewBox="0 0 200 300"
-                    className="w-full h-full"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    {/* Grid overlay */}
-                    {Array.from({ length: 11 }).map((_, i) => (
-                      <line key={`v${i}`} x1={i * 20} y1="0" x2={i * 20} y2="300" stroke="rgba(34,211,238,0.06)" strokeWidth="0.5" />
-                    ))}
-                    {Array.from({ length: 16 }).map((_, i) => (
-                      <line key={`h${i}`} x1="0" y1={i * 20} x2="200" y2={i * 20} stroke="rgba(34,211,238,0.06)" strokeWidth="0.5" />
-                    ))}
-
-                    {/* NJ outline */}
-                    <path
-                      d="M120 10 C130 10, 150 20, 155 35 C160 50, 158 65, 150 80 C142 95, 130 110, 125 130 C120 150, 118 165, 120 180 C122 195, 130 210, 125 225 C120 240, 100 255, 90 265 C80 275, 65 280, 55 275 C45 270, 40 260, 45 245 C50 230, 60 215, 65 200 C70 185, 68 170, 60 155 C52 140, 45 130, 50 115 C55 100, 70 90, 80 75 C90 60, 95 45, 100 30 C105 15, 110 10, 120 10Z"
-                      fill="rgba(34,211,238,0.04)"
-                      stroke="rgba(34,211,238,0.25)"
-                      strokeWidth="1.5"
-                    />
-
-                    {/* Southern service area highlight */}
-                    <path
-                      d="M125 130 C120 150, 118 165, 120 180 C122 195, 130 210, 125 225 C120 240, 100 255, 90 265 C80 275, 65 280, 55 275 C45 270, 40 260, 45 245 C50 230, 60 215, 65 200 C70 185, 68 170, 60 155 C52 140, 55 135, 70 130 C85 125, 110 128, 125 130Z"
-                      fill="rgba(34,211,238,0.15)"
-                      stroke="rgba(34,211,238,0.5)"
-                      strokeWidth="2"
-                      strokeDasharray="6 3"
-                    />
-
-                    {/* Pulsing dots at county centers */}
-                    <motion.circle
-                      cx="95" cy="155" r="3"
-                      fill="rgba(34,211,238,0.8)"
-                      animate={{ r: [3, 5, 3], opacity: [0.8, 0.4, 0.8] }}
-                      transition={{ repeat: Infinity, duration: 2, delay: 0 }}
-                    />
-                    <motion.circle
-                      cx="80" cy="210" r="3"
-                      fill="rgba(74,222,128,0.8)"
-                      animate={{ r: [3, 5, 3], opacity: [0.8, 0.4, 0.8] }}
-                      transition={{ repeat: Infinity, duration: 2, delay: 0.5 }}
-                    />
-                    <motion.circle
-                      cx="58" cy="240" r="3"
-                      fill="rgba(74,222,128,0.8)"
-                      animate={{ r: [3, 5, 3], opacity: [0.8, 0.4, 0.8] }}
-                      transition={{ repeat: Infinity, duration: 2, delay: 1 }}
-                    />
-                    <motion.circle
-                      cx="110" cy="180" r="3"
-                      fill="rgba(34,211,238,0.8)"
-                      animate={{ r: [3, 5, 3], opacity: [0.8, 0.4, 0.8] }}
-                      transition={{ repeat: Infinity, duration: 2, delay: 1.5 }}
-                    />
-                  </svg>
-
-                  {/* County HUD labels */}
-                  <div className="absolute top-[36%] left-[18%]">
-                    <div className="bg-primary-950/80 backdrop-blur-sm rounded px-2.5 py-1 border border-accent-500/20">
-                      <span className="text-[10px] font-mono font-bold text-accent-400">BRL</span>
-                      <span className="text-[9px] font-mono text-white/40 ml-1.5">Burlington</span>
-                    </div>
-                  </div>
-                  <div className="absolute top-[58%] left-[30%]">
-                    <div className="bg-primary-950/80 backdrop-blur-sm rounded px-2.5 py-1 border border-green-500/20">
-                      <span className="text-[10px] font-mono font-bold text-green-400">CMB</span>
-                      <span className="text-[9px] font-mono text-white/40 ml-1.5">Cumberland</span>
-                    </div>
-                  </div>
-                  <div className="absolute top-[70%] left-[5%]">
-                    <div className="bg-primary-950/80 backdrop-blur-sm rounded px-2.5 py-1 border border-green-500/20">
-                      <span className="text-[10px] font-mono font-bold text-green-400">SLM</span>
-                      <span className="text-[9px] font-mono text-white/40 ml-1.5">Salem</span>
-                    </div>
-                  </div>
-                  <div className="absolute top-[42%] right-[2%]">
-                    <div className="bg-primary-950/80 backdrop-blur-sm rounded px-2.5 py-1 border border-accent-500/20">
-                      <span className="text-[10px] font-mono font-bold text-accent-400">ATL</span>
-                      <span className="text-[9px] font-mono text-white/40 ml-1.5">Atlantic</span>
-                    </div>
-                  </div>
-
-                  {/* Drone icon */}
-                  <motion.div
-                    className="absolute top-[48%] left-[38%] text-accent-400"
-                    animate={{ y: [-2, 2, -2] }}
-                    transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-                  >
-                    <IconDrone className="w-7 h-7" />
-                  </motion.div>
-                </div>
+              {/* 3D Globe */}
+              <div className="flex items-center justify-center py-8">
+                <Globe className="max-w-[450px]" />
               </div>
 
-              {/* Legend */}
+              {/* Legend overlay */}
               <div className="absolute bottom-4 left-4 bg-primary-950/80 backdrop-blur-sm rounded-lg p-3 border border-accent-500/10 z-10">
-                <div className="flex items-center gap-2 mb-1.5">
-                  <div className="w-3 h-2 rounded-sm bg-accent-400/30 border border-accent-400/50" />
-                  <span className="text-[10px] font-mono text-white/60">Active Service Zone</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-2 rounded-sm bg-accent-400/10 border border-accent-400/20" />
-                  <span className="text-[10px] font-mono text-white/40">State Boundary</span>
-                </div>
+                <p className="text-[10px] font-mono text-white/40 mb-2">Service Counties</p>
+                {["Burlington", "Cumberland", "Salem", "Atlantic"].map((c) => (
+                  <div key={c} className="flex items-center gap-2 mb-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent-400" />
+                    <span className="text-[10px] font-mono text-white/60">{c}</span>
+                  </div>
+                ))}
               </div>
 
-              {/* Badge */}
-              <div className="absolute top-4 right-4 bg-primary-950/80 backdrop-blur-sm rounded-lg px-4 py-2.5 border border-accent-500/10 z-10">
+              {/* Stats badge */}
+              <div className="absolute bottom-4 right-4 bg-primary-950/80 backdrop-blur-sm rounded-lg px-4 py-2.5 border border-accent-500/10 z-10">
                 <p className="text-[10px] font-mono text-accent-400/60">
-                  SECTORS: 4 &middot; ACRES: 277K+
+                  277K+ ACRES &middot; DRAG TO ROTATE
                 </p>
               </div>
-
-              {/* Coordinate readout */}
-              <motion.div
-                className="absolute bottom-4 right-4 text-[9px] font-mono text-accent-400/30 z-10"
-                animate={{ opacity: [0.3, 0.6, 0.3] }}
-                transition={{ repeat: Infinity, duration: 4 }}
-              >
-                <div>LAT 39.7837 N</div>
-                <div>LON 74.9723 W</div>
-                <div>ALT 000 ft AGL</div>
-              </motion.div>
             </div>
           </FadeIn>
         </div>

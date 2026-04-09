@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { GridBackground } from "@/components/ui/grid-background";
+import { Globe } from "@/components/ui/globe";
+import { BackgroundBeams } from "@/components/ui/background-beams";
 import { FadeIn } from "@/components/FadeIn";
 import {
   IconSpray,
@@ -85,44 +87,72 @@ export default function HomePage() {
       <section className="relative min-h-[90vh] flex items-center bg-primary-950 overflow-hidden">
         <GridBackground />
         <div className="container-narrow mx-auto px-5 py-24 relative z-10">
-          <FadeIn>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent-800/60 bg-accent-900/40 backdrop-blur-sm mb-8">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent-400 animate-pulse" />
-              <span className="text-xs font-medium text-accent-300/90 font-mono">
-                FAA Part 137 Certified &middot; South Jersey
-              </span>
+          <div className="grid lg:grid-cols-2 gap-8 items-center">
+            <div>
+              <FadeIn>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent-800/60 bg-accent-900/40 backdrop-blur-sm mb-8">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent-400 animate-pulse" />
+                  <span className="text-xs font-medium text-accent-300/90 font-mono">
+                    FAA Part 137 Certified &middot; South Jersey
+                  </span>
+                </div>
+              </FadeIn>
+
+              <FadeIn delay={0.1}>
+                <h1 className="text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-white leading-[1.05] tracking-tight">
+                  Next-gen drone technology for{" "}
+                  <span className="text-accent-400">smarter farming</span>
+                </h1>
+              </FadeIn>
+
+              <FadeIn delay={0.2}>
+                <p className="mt-6 text-lg md:text-xl text-white/50 max-w-xl leading-relaxed">
+                  3D field mapping. Precision spraying. NDVI analytics.
+                  Cut chemical costs 30% with centimeter-level GPS accuracy.
+                </p>
+              </FadeIn>
+
+              <FadeIn delay={0.3}>
+                <div className="flex flex-wrap gap-4 mt-10">
+                  <Link href="/contact" className="btn-primary text-base">
+                    Get a Free Quote
+                    <IconArrowRight className="w-4 h-4" />
+                  </Link>
+                  <Link href="/roi-calculator" className="btn-secondary text-base">
+                    Calculate Your ROI
+                  </Link>
+                </div>
+              </FadeIn>
             </div>
-          </FadeIn>
 
-          <FadeIn delay={0.1}>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.05] tracking-tight max-w-3xl">
-              Next-gen drone technology for{" "}
-              <span className="text-accent-400">smarter farming</span>
-            </h1>
-          </FadeIn>
-
-          <FadeIn delay={0.2}>
-            <p className="mt-6 text-lg md:text-xl text-white/50 max-w-xl leading-relaxed">
-              3D field mapping. Precision spraying. NDVI analytics.
-              Cut chemical costs 30% with centimeter-level GPS accuracy.
-            </p>
-          </FadeIn>
-
-          <FadeIn delay={0.3}>
-            <div className="flex flex-wrap gap-4 mt-10">
-              <Link href="/contact" className="btn-primary text-base">
-                Get a Free Quote
-                <IconArrowRight className="w-4 h-4" />
-              </Link>
-              <Link href="/roi-calculator" className="btn-secondary text-base">
-                Calculate Your ROI
-              </Link>
-            </div>
-          </FadeIn>
+            {/* 3D Globe */}
+            <FadeIn delay={0.2} direction="right">
+              <div className="hidden lg:block relative">
+                <Globe className="max-w-[480px] opacity-80" />
+                {/* Floating HUD labels */}
+                <motion.div
+                  className="absolute top-16 right-8 flex items-center gap-2 px-3 py-2 bg-accent-900/60 backdrop-blur-md rounded-lg border border-accent-500/20"
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+                >
+                  <IconDrone className="w-4 h-4 text-accent-400" />
+                  <span className="text-xs text-white/80 font-mono">DJI T25 Fleet</span>
+                </motion.div>
+                <motion.div
+                  className="absolute bottom-28 left-4 flex items-center gap-2 px-3 py-2 bg-accent-900/60 backdrop-blur-md rounded-lg border border-accent-500/20"
+                  animate={{ y: [0, 6, 0] }}
+                  transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 0.5 }}
+                >
+                  <IconMap className="w-4 h-4 text-green-400" />
+                  <span className="text-xs text-white/80 font-mono">South Jersey</span>
+                </motion.div>
+              </div>
+            </FadeIn>
+          </div>
 
           {/* Stats row */}
           <FadeIn delay={0.4}>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 pt-10 border-t border-accent-500/10">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-10 border-t border-accent-500/10">
               {stats.map((s, i) => (
                 <div key={i}>
                   <p className="text-3xl font-bold text-white font-mono">{s.value}</p>
@@ -277,6 +307,7 @@ export default function HomePage() {
 
       {/* ── CTA ──────────────────────────────────────────── */}
       <section className="relative bg-primary-950 overflow-hidden">
+        <BackgroundBeams />
         <GridBackground />
         <div className="container-narrow mx-auto px-5 py-24 relative z-10 text-center">
           <FadeIn>
