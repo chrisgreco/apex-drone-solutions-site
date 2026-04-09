@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { GridBackground } from "@/components/ui/grid-background";
 import { Globe } from "@/components/ui/globe";
 import { BackgroundBeams } from "@/components/ui/background-beams";
+import { Typewriter } from "@/components/ui/typewriter";
 import { FadeIn } from "@/components/FadeIn";
 import {
   IconSpray,
@@ -106,9 +107,12 @@ export default function HomePage() {
               </FadeIn>
 
               <FadeIn delay={0.2}>
-                <p className="mt-6 text-lg md:text-xl text-white/50 max-w-xl leading-relaxed">
-                  3D field mapping. Precision spraying. NDVI analytics.
-                  Cut chemical costs 30% with centimeter-level GPS accuracy.
+                <p className="mt-6 text-lg md:text-xl text-white/50 max-w-xl leading-relaxed font-mono">
+                  <Typewriter
+                    text="3D field mapping. Precision spraying. NDVI analytics. Cut chemical costs 30% with centimeter-level GPS accuracy."
+                    speed={30}
+                    startDelay={800}
+                  />
                 </p>
               </FadeIn>
 
