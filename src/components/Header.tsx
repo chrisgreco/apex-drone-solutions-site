@@ -11,6 +11,7 @@ const navItems = [
   { href: "/equipment", label: "Equipment" },
   { href: "/coverage", label: "Coverage Area" },
   { href: "/roi-calculator", label: "ROI Calculator" },
+  { href: "/resources", label: "Resources" },
   { href: "/about", label: "About" },
 ];
 
