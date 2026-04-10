@@ -10,6 +10,7 @@ const navItems = [
   { href: "/how-it-works", label: "How It Works" },
   { href: "/equipment", label: "Equipment" },
   { href: "/coverage", label: "Coverage Area" },
+  { href: "/conditions", label: "Conditions" },
   { href: "/roi-calculator", label: "ROI Calculator" },
   { href: "/resources", label: "Resources" },
   { href: "/about", label: "About" },
