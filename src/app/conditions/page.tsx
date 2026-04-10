@@ -58,9 +58,10 @@ export default function ConditionsPage() {
           </FadeIn>
           <FadeIn delay={0.2}>
             <p className="mt-6 text-lg text-white/60 max-w-2xl">
-              Real-time NASA satellite monitoring across South Jersey&apos;s
-              agricultural corridor. Track events that impact your farm and
-              drone operations.
+              Real-time NASA EONET satellite monitoring across South Jersey&apos;s
+              agricultural corridor — Burlington, Cumberland, Salem &amp; Atlantic
+              counties. Track storms, floods, wildfires, drought, and temperature
+              extremes that impact your farm and drone operations.
             </p>
           </FadeIn>
 
@@ -137,8 +138,12 @@ export default function ConditionsPage() {
                 // Active Events
               </p>
               <h2 className="text-3xl md:text-4xl font-bold text-white">
-                Current Conditions
+                Current Farm Weather Conditions
               </h2>
+              <p className="mt-3 text-white/40 max-w-lg mx-auto text-sm">
+                Live NASA satellite data for South Jersey farmland. Each event
+                includes recommended drone survey actions.
+              </p>
             </div>
           </FadeIn>
 
@@ -195,11 +200,12 @@ export default function ConditionsPage() {
               // Engage
             </p>
             <h2 className="text-3xl md:text-4xl font-bold text-white">
-              Conditions Affecting Your Farm?
+              Weather Conditions Affecting Your NJ Farm?
             </h2>
-            <p className="mt-3 text-white/50 max-w-md mx-auto">
-              Whether it&apos;s storm damage assessment, drought monitoring, or
-              post-flood field surveys — we&apos;re ready to fly.
+            <p className="mt-3 text-white/50 max-w-lg mx-auto">
+              Whether it&apos;s post-storm crop damage assessment, drought
+              NDVI monitoring, or post-flood drainage surveys across South
+              Jersey — AG Drones NJ is ready to fly.
             </p>
             <div className="flex flex-wrap justify-center gap-4 mt-8">
               <Link
