@@ -2,7 +2,7 @@
 
 import { NextResponse } from "next/server";
 import {
-  NJ_BBOX,
+  REGION_BBOX,
   EONET_CATEGORIES,
   normalizeEvents,
   type EonetResponse,
@@ -18,7 +18,7 @@ export async function GET() {
     url.searchParams.set("category", EONET_CATEGORIES);
     url.searchParams.set(
       "bbox",
-      `${NJ_BBOX.west},${NJ_BBOX.south},${NJ_BBOX.east},${NJ_BBOX.north}`
+      `${REGION_BBOX.west},${REGION_BBOX.south},${REGION_BBOX.east},${REGION_BBOX.north}`
     );
 
     const res = await fetch(url.toString(), { next: { revalidate: 900 } });

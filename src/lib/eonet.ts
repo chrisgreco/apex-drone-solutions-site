@@ -82,12 +82,12 @@ export const CATEGORY_CONFIG: Record<
   },
 };
 
-// NJ bounding box (with buffer)
-export const NJ_BBOX = {
-  west: -75.6,
-  south: 38.9,
-  east: -73.9,
-  north: 41.4,
+// Regional bounding box: NJ + PA + DE + NY
+export const REGION_BBOX = {
+  west: -80.6,  // Western PA
+  south: 38.4,  // Southern DE
+  east: -71.8,  // Eastern NY/Long Island
+  north: 45.1,  // Northern NY
 };
 
 export const EONET_CATEGORIES = Object.keys(CATEGORY_CONFIG).join(",");

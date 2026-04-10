@@ -58,9 +58,9 @@ export default function ConditionsPage() {
           </FadeIn>
           <FadeIn delay={0.2}>
             <p className="mt-6 text-lg text-white/60 max-w-2xl">
-              Real-time NASA EONET satellite monitoring across South Jersey&apos;s
-              agricultural corridor — Burlington, Cumberland, Salem &amp; Atlantic
-              counties. Track storms, floods, wildfires, drought, and temperature
+              Real-time NASA EONET satellite monitoring across the
+              Mid-Atlantic region — New Jersey, Pennsylvania, Delaware &amp; New
+              York. Track storms, floods, wildfires, drought, and temperature
               extremes that impact your farm and drone operations.
             </p>
           </FadeIn>
@@ -99,7 +99,7 @@ export default function ConditionsPage() {
                 <div className="flex items-center gap-4 text-[10px] font-mono text-accent-400/50">
                   <span>MAPBOX 3D TERRAIN</span>
                   <span className="w-1 h-1 rounded-full bg-accent-400/40" />
-                  <span>SOUTH JERSEY</span>
+                  <span>NJ / PA / DE / NY</span>
                 </div>
                 <div className="text-[10px] font-mono text-accent-400/40">
                   {lastChecked && (
@@ -141,7 +141,7 @@ export default function ConditionsPage() {
                 Current Farm Weather Conditions
               </h2>
               <p className="mt-3 text-white/40 max-w-lg mx-auto text-sm">
-                Live NASA satellite data for South Jersey farmland. Each event
+                Live NASA satellite data for NJ, PA, DE &amp; NY farmland. Each event
                 includes recommended drone survey actions.
               </p>
             </div>
@@ -168,7 +168,7 @@ export default function ConditionsPage() {
                 </div>
                 <h3 className="text-xl font-bold text-white">All Clear</h3>
                 <p className="text-sm text-white/50 mt-2">
-                  No active weather events detected in the South Jersey region.
+                  No active weather events detected in the Mid-Atlantic region.
                 </p>
                 {lastChecked && (
                   <p className="text-[10px] font-mono text-accent-400/40 mt-4">

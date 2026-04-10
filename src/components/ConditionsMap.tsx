@@ -7,11 +7,11 @@ import { CATEGORY_CONFIG, type ConditionEvent } from "@/lib/eonet";
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-// South Jersey center
-const NJ_CENTER: [number, number] = [-74.85, 39.55];
-const NJ_ZOOM = 8.2;
-const NJ_PITCH = 55;
-const NJ_BEARING = -10;
+// Mid-Atlantic region center (NJ/PA/DE/NY)
+const REGION_CENTER: [number, number] = [-75.5, 40.8];
+const REGION_ZOOM = 6.3;
+const REGION_PITCH = 45;
+const REGION_BEARING = -10;
 
 interface ConditionsMapProps {
   events: ConditionEvent[];
@@ -29,10 +29,10 @@ export default function ConditionsMap({ events }: ConditionsMapProps) {
     const map = new mapboxgl.Map({
       container: containerRef.current,
       style: "mapbox://styles/mapbox/satellite-streets-v12",
-      center: NJ_CENTER,
-      zoom: NJ_ZOOM,
-      pitch: NJ_PITCH,
-      bearing: NJ_BEARING,
+      center: REGION_CENTER,
+      zoom: REGION_ZOOM,
+      pitch: REGION_PITCH,
+      bearing: REGION_BEARING,
       antialias: true,
       attributionControl: false,
     });
