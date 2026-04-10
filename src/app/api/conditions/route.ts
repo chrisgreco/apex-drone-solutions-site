@@ -31,7 +31,13 @@ export async function GET() {
     }
 
     const data: EonetResponse = await res.json();
-    const events: ConditionEvent[] = normalizeEvents(data);
+    const allEvents: ConditionEvent[] = normalizeEvents(data);
+
+    // Only show events from the last 30 days — EONET keeps stale "open" events
+    const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
+    const events = allEvents.filter(
+      (e) => new Date(e.date).getTime() > thirtyDaysAgo
+    );
 
     return NextResponse.json({
       events,

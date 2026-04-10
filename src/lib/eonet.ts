@@ -94,6 +94,15 @@ export const EONET_CATEGORIES = Object.keys(CATEGORY_CONFIG).join(",");
 
 // ─── Fetch Helper ───────────────────────────────────────────
 
+function decodeHtmlEntities(str: string): string {
+  return str
+    .replace(/&#039;/g, "'")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"');
+}
+
 export function normalizeEvents(data: EonetResponse): ConditionEvent[] {
   return data.events
     .filter((e) => e.geometry.length > 0)
@@ -106,8 +115,8 @@ export function normalizeEvents(data: EonetResponse): ConditionEvent[] {
 
       return {
         id: e.id,
-        title: e.title,
-        description: e.description,
+        title: decodeHtmlEntities(e.title),
+        description: e.description ? decodeHtmlEntities(e.description) : null,
         category: e.categories[0]?.id ?? "unknown",
         coordinates: coords,
         magnitude: latest.magnitudeValue,
