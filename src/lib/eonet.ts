@@ -42,6 +42,10 @@ export interface ConditionEvent {
   magnitudeUnit: string | null;
   date: string;
   link: string;
+  source: "eonet" | "nws";
+  severity?: "Minor" | "Moderate" | "Severe" | "Extreme" | "Unknown";
+  areaDesc?: string;
+  expires?: string;
 }
 
 // ─── Category Config ────────────────────────────────────────
@@ -80,6 +84,13 @@ export const CATEGORY_CONFIG: Record<
     glow: "rgba(168,85,247,0.5)",
     cta: "Schedule Frost/Heat Damage Assessment",
   },
+  // Fallback for NWS alerts that don't map to a specific category above
+  weatherAlert: {
+    label: "Weather Alert",
+    color: "#f97316",
+    glow: "rgba(249,115,22,0.5)",
+    cta: "Request Weather-Impact Survey",
+  },
 };
 
 // Regional bounding box: NJ + PA + DE + NY
@@ -90,7 +101,15 @@ export const REGION_BBOX = {
   north: 45.1,  // Northern NY
 };
 
-export const EONET_CATEGORIES = Object.keys(CATEGORY_CONFIG).join(",");
+// Only the real EONET API categories (excludes "weatherAlert" which is a fallback
+// for NWS alerts that don't map to a specific category).
+export const EONET_CATEGORIES = [
+  "severeStorms",
+  "floods",
+  "wildfires",
+  "drought",
+  "tempExtremes",
+].join(",");
 
 // ─── Fetch Helper ───────────────────────────────────────────
 
@@ -114,6 +133,7 @@ export function normalizeEvents(data: EonetResponse): ConditionEvent[] {
           : (latest.coordinates as [number, number][])[0];
 
       return {
+        source: "eonet" as const,
         id: e.id,
         title: decodeHtmlEntities(e.title),
         description: e.description ? decodeHtmlEntities(e.description) : null,
