@@ -126,6 +126,16 @@ export default function HomePage() {
                     Calculate Your ROI
                   </Link>
                 </div>
+                <div className="mt-4">
+                  <Link
+                    href="/resources/spray-today"
+                    className="inline-flex items-center gap-2 text-sm text-accent-400 hover:text-accent-300 font-medium"
+                  >
+                    <IconDroplet className="w-4 h-4" />
+                    Free tool: Should I spray today?
+                    <IconArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
               </FadeIn>
             </div>
 
