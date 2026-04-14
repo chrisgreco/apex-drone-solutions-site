@@ -109,8 +109,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: `${baseUrl}/resources/nj-crop-dashboard`,
       lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7,
+      changeFrequency: "hourly",
+      priority: 1.0,
     },
     {
       url: `${baseUrl}/resources/growing-degree-days`,

@@ -18,7 +18,7 @@ export async function GET(req: Request) {
   const supabase = createAdminClient();
 
   const { data, error } = await supabase
-    .from("spray_alert_subscribers")
+    .from("farm_profiles")
     .update({
       confirmed: true,
       confirmed_at: new Date().toISOString(),

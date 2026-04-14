@@ -70,7 +70,7 @@ export async function GET(req: Request) {
 
   const supabase = createAdminClient();
   const { data: subs, error } = await supabase
-    .from("spray_alert_subscribers")
+    .from("farm_profiles")
     .select(
       "id, email, farm_name, latitude, longitude, location_label, unsubscribe_token, last_alert_sent_at, alerts_sent_count"
     )
@@ -148,16 +148,16 @@ export async function GET(req: Request) {
       });
 
       await supabase
-        .from("spray_alert_subscribers")
+        .from("farm_profiles")
         .update({
           last_alert_sent_at: new Date().toISOString(),
           alerts_sent_count: s.alerts_sent_count + 1,
         })
         .eq("id", s.id);
 
-      await supabase.from("spray_alert_sends").insert({
-        subscriber_id: s.id,
-        alert_type: "window_open",
+      await supabase.from("farm_alert_sends").insert({
+        farm_profile_id: s.id,
+        alert_type: "spray_window_open",
         forecast_summary: {
           window_hours: window.hours,
           start: startHour.time,

@@ -128,11 +128,11 @@ export default function HomePage() {
                 </div>
                 <div className="mt-4">
                   <Link
-                    href="/resources/spray-today"
+                    href="/resources/nj-crop-dashboard"
                     className="inline-flex items-center gap-2 text-sm text-accent-400 hover:text-accent-300 font-medium"
                   >
-                    <IconDroplet className="w-4 h-4" />
-                    Free tool: Should I spray today?
+                    <IconLeaf className="w-4 h-4" />
+                    Free tool: NJ Grower Dashboard
                     <IconArrowRight className="w-3 h-3" />
                   </Link>
                 </div>

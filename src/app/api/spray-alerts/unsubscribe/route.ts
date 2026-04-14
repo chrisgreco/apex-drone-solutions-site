@@ -18,7 +18,7 @@ export async function GET(req: Request) {
   const supabase = createAdminClient();
 
   const { data, error } = await supabase
-    .from("spray_alert_subscribers")
+    .from("farm_profiles")
     .update({ unsubscribed_at: new Date().toISOString() })
     .eq("unsubscribe_token", token)
     .is("unsubscribed_at", null)

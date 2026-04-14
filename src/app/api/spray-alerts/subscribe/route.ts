@@ -36,7 +36,7 @@ export async function POST(req: Request) {
   const supabase = await createClient();
 
   const { data, error } = await supabase
-    .from("spray_alert_subscribers")
+    .from("farm_profiles")
     .insert({
       email: parsed.email.toLowerCase(),
       farm_name: parsed.farmName ?? null,
@@ -44,6 +44,7 @@ export async function POST(req: Request) {
       longitude: parsed.lon,
       location_label: parsed.label,
       confirmation_token: confirmationToken,
+      source: "spray-today",
     })
     .select("id, confirmation_token")
     .single();
