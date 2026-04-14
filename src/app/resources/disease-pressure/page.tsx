@@ -6,6 +6,7 @@ import { FadeIn } from "@/components/FadeIn";
 import { GridBackground } from "@/components/ui/grid-background";
 import { IconShield, IconArrowRight, IconLeaf } from "@/components/Icons";
 import { useCropIntel } from "@/components/dashboard/useCropIntel";
+import { AlertSignupCTA } from "@/components/dashboard/AlertSignupCTA";
 import { CROPS } from "@/lib/farm-intel/crops";
 import type { DiseasePrediction, RiskLevel } from "@/lib/farm-intel/disease-models";
 
@@ -88,7 +89,7 @@ function DiseasePressureInner() {
       <section className="px-6 md:px-8 pt-28 md:pt-32 pb-4">
         <div className="container-narrow">
           <Link
-            href="/resources/nj-crop-dashboard"
+            href="/resources"
             className="text-sm text-white/50 hover:text-white/80 transition inline-flex items-center gap-1"
           >
             ← Back to dashboard
@@ -178,6 +179,15 @@ function DiseasePressureInner() {
               pesticide label before applying any product.
             </p>
           </div>
+        </div>
+      </section>
+
+      <section className="px-6 md:px-8 pb-8">
+        <div className="container-narrow">
+          <AlertSignupCTA
+            heading="Get an email when disease pressure spikes"
+            pitch="We'll send you a heads-up as soon as a HIGH or EXTREME infection event is predicted for your crop — before the sporulation window opens, while there's still time to spray."
+          />
         </div>
       </section>
 

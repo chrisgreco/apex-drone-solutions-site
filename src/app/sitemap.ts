@@ -61,8 +61,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: `${baseUrl}/resources`,
       lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
+      changeFrequency: "hourly",
+      priority: 1.0,
     },
     {
       url: `${baseUrl}/resources/crop-disease-guide`,
@@ -105,12 +105,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "hourly",
       priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/resources/nj-crop-dashboard`,
-      lastModified: new Date(),
-      changeFrequency: "hourly",
-      priority: 1.0,
     },
     {
       url: `${baseUrl}/resources/disease-pressure`,

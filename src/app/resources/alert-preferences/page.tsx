@@ -205,7 +205,7 @@ function AlertPreferencesInner() {
 
           <div className="mt-8 text-center">
             <Link
-              href="/resources/nj-crop-dashboard"
+              href="/resources"
               className="inline-flex items-center gap-2 text-sm text-accent-400 hover:text-accent-300 font-medium"
             >
               Back to dashboard

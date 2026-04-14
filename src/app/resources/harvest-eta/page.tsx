@@ -6,6 +6,7 @@ import { FadeIn } from "@/components/FadeIn";
 import { GridBackground } from "@/components/ui/grid-background";
 import { IconLeaf, IconArrowRight } from "@/components/Icons";
 import { useCropIntel } from "@/components/dashboard/useCropIntel";
+import { AlertSignupCTA } from "@/components/dashboard/AlertSignupCTA";
 import { CROPS } from "@/lib/farm-intel/crops";
 
 function HarvestEtaInner() {
@@ -24,7 +25,7 @@ function HarvestEtaInner() {
       <section className="px-6 md:px-8 pt-28 md:pt-32 pb-4">
         <div className="container-narrow">
           <Link
-            href="/resources/nj-crop-dashboard"
+            href="/resources"
             className="text-sm text-white/50 hover:text-white/80 transition inline-flex items-center gap-1"
           >
             ← Back to dashboard
@@ -191,6 +192,15 @@ function HarvestEtaInner() {
               average from Open-Meteo's NJ archive.
             </p>
           </div>
+        </div>
+      </section>
+
+      <section className="px-6 md:px-8 pb-8">
+        <div className="container-narrow">
+          <AlertSignupCTA
+            heading="Get updates as harvest approaches"
+            pitch="We'll fold harvest ETA into your daily digest alongside spray windows and disease pressure — so you know when to line up labor, bins, and packing."
+          />
         </div>
       </section>
 

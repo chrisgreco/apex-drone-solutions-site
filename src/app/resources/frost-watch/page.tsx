@@ -6,6 +6,7 @@ import { FadeIn } from "@/components/FadeIn";
 import { GridBackground } from "@/components/ui/grid-background";
 import { IconSun, IconArrowRight, IconLeaf } from "@/components/Icons";
 import { useCropIntel } from "@/components/dashboard/useCropIntel";
+import { AlertSignupCTA } from "@/components/dashboard/AlertSignupCTA";
 import { CROPS, STAGE_LABEL, frostThresholdFor, type CropStage } from "@/lib/farm-intel/crops";
 import type { HourlyForecast } from "@/lib/spray-decision";
 
@@ -45,7 +46,7 @@ function FrostWatchInner() {
       <section className="px-6 md:px-8 pt-28 md:pt-32 pb-4">
         <div className="container-narrow">
           <Link
-            href="/resources/nj-crop-dashboard"
+            href="/resources"
             className="text-sm text-white/50 hover:text-white/80 transition inline-flex items-center gap-1"
           >
             ← Back to dashboard
@@ -220,6 +221,15 @@ function FrostWatchInner() {
               Wind machines, orchard heaters, and overhead irrigation can offset by 2–4°F.
             </p>
           </div>
+        </div>
+      </section>
+
+      <section className="px-6 md:px-8 pb-8">
+        <div className="container-narrow">
+          <AlertSignupCTA
+            heading="Get a frost alert before tonight"
+            pitch="We'll email you the afternoon of any night where forecast low falls under your crop's stage-specific damage or kill threshold — with enough lead time to move wind machines, fire up heaters, or harvest ready fruit."
+          />
         </div>
       </section>
 

@@ -6,6 +6,7 @@ import { FadeIn } from "@/components/FadeIn";
 import { GridBackground } from "@/components/ui/grid-background";
 import { IconZap, IconArrowRight, IconLeaf } from "@/components/Icons";
 import { useCropIntel } from "@/components/dashboard/useCropIntel";
+import { AlertSignupCTA } from "@/components/dashboard/AlertSignupCTA";
 import { CROPS } from "@/lib/farm-intel/crops";
 
 function MonthlyBars({ months }: { months: { month: string; hours: number }[] }) {
@@ -54,7 +55,7 @@ function ChillHoursInner() {
       <section className="px-6 md:px-8 pt-28 md:pt-32 pb-4">
         <div className="container-narrow">
           <Link
-            href="/resources/nj-crop-dashboard"
+            href="/resources"
             className="text-sm text-white/50 hover:text-white/80 transition inline-flex items-center gap-1"
           >
             ← Back to dashboard
@@ -260,6 +261,15 @@ function ChillHoursInner() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="px-6 md:px-8 pb-8">
+        <div className="container-narrow">
+          <AlertSignupCTA
+            heading="Get an email the day chill requirement is met"
+            pitch="One-time alert when your variety hits its chill target — the signal to finish pruning and prep your pre-bloom sprays. No ongoing email spam, just the milestone."
+          />
         </div>
       </section>
 
