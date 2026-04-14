@@ -9,7 +9,6 @@ const navItems = [
   { href: "/services", label: "Services" },
   { href: "/how-it-works", label: "How It Works" },
   { href: "/equipment", label: "Equipment" },
-  { href: "/coverage", label: "Coverage Area" },
   { href: "/conditions", label: "Conditions" },
   { href: "/roi-calculator", label: "ROI Calculator" },
   { href: "/resources", label: "Resources" },
@@ -27,12 +26,12 @@ export function Header() {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden lg:flex items-center gap-6" aria-label="Main navigation">
+        <nav className="hidden lg:flex items-center gap-5 xl:gap-6" aria-label="Main navigation">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="text-[0.8125rem] font-medium text-white/60 hover:text-accent-400 transition-colors"
+              className="text-[0.8125rem] font-medium text-white/60 hover:text-accent-400 transition-colors whitespace-nowrap"
             >
               {item.label}
             </Link>

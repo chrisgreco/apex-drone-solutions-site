@@ -197,7 +197,7 @@ function SprayTodayInner() {
       )}
 
       {/* HERO */}
-      <section className={`section ${alertParam ? "pt-8" : "pt-32"} relative`}>
+      <section className={`px-6 md:px-8 pb-10 md:pb-12 ${alertParam ? "pt-8" : "pt-32"} relative`}>
         <div className="container-narrow relative z-10">
           <FadeIn>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-500/10 border border-accent-500/30 text-accent-400 text-sm font-medium mb-6">
@@ -216,7 +216,7 @@ function SprayTodayInner() {
       </section>
 
       {/* LOCATION PICKER */}
-      <section className="section pt-0">
+      <section className="px-6 md:px-8 pb-8 md:pb-10">
         <div className="container-narrow">
           <FadeIn>
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
@@ -254,7 +254,7 @@ function SprayTodayInner() {
       </section>
 
       {/* CURRENT VERDICT */}
-      <section className="section pt-0">
+      <section className="px-6 md:px-8 pb-8 md:pb-10">
         <div className="container-narrow">
           {loading && !forecast && (
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-center text-white/60">
@@ -310,7 +310,7 @@ function SprayTodayInner() {
 
       {/* NEXT WINDOW + RAIN WASHOFF */}
       {forecast && (
-        <section className="section pt-0">
+        <section className="px-6 md:px-8 pb-8 md:pb-10">
           <div className="container-narrow grid grid-cols-1 md:grid-cols-2 gap-4">
             <FadeIn>
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 h-full">
@@ -382,7 +382,7 @@ function SprayTodayInner() {
 
       {/* 7-DAY TIMELINE */}
       {forecast && forecast.hourly.length > 0 && (
-        <section className="section pt-0">
+        <section className="px-6 md:px-8 pb-8 md:pb-10">
           <div className="container-narrow">
             <FadeIn>
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
@@ -399,7 +399,7 @@ function SprayTodayInner() {
 
       {/* WIND AT DRONE ALTITUDE */}
       {forecast && forecast.hourly[0] && (
-        <section className="section pt-0">
+        <section className="px-6 md:px-8 pb-8 md:pb-10">
           <div className="container-narrow grid grid-cols-1 md:grid-cols-2 gap-4">
             <FadeIn>
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 h-full">
@@ -494,7 +494,7 @@ function SprayTodayInner() {
       )}
 
       {/* SUBSCRIBE */}
-      <section className="section pt-0">
+      <section className="px-6 md:px-8 pb-8 md:pb-10">
         <div className="container-narrow">
           <FadeIn>
             <div className="rounded-2xl border border-accent-500/30 bg-gradient-to-br from-accent-500/10 to-transparent p-6 md:p-8">
@@ -530,7 +530,7 @@ function SprayTodayInner() {
       </section>
 
       {/* THRESHOLDS REFERENCE */}
-      <section className="section pt-0">
+      <section className="px-6 md:px-8 pb-8 md:pb-10">
         <div className="container-narrow">
           <FadeIn>
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
@@ -597,7 +597,7 @@ function SprayTodayInner() {
       </section>
 
       {/* CTA */}
-      <section className="section pt-0">
+      <section className="px-6 md:px-8 pb-8 md:pb-10">
         <div className="container-narrow">
           <FadeIn>
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8 text-center">
