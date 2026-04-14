@@ -25,27 +25,23 @@ import { ActionBanner } from "@/components/dashboard/ActionBanner";
 import {
   evaluateHour,
   findNextGoWindow,
-  type SprayForecast,
   type Verdict,
 } from "@/lib/spray-decision";
 import {
   CROPS,
-  CROP_LIST,
   STAGE_LABEL,
   type CropId,
   type CropStage,
 } from "@/lib/farm-intel/crops";
 import { computeBannerCards } from "@/lib/farm-intel/banner";
+import type { RiskLevel } from "@/lib/farm-intel/disease-models";
+import type { CropIntelResponse } from "@/app/api/crop-intel/route";
 import {
   NJ_CROPS,
   NJ_COUNTIES,
   NJ_RANKINGS,
   NJ_HEADLINE_STATS,
 } from "@/lib/nj-ag-stats";
-
-/* ------------------------------------------------------------------ */
-/*  Profile model — lives in localStorage; matches FarmPicker payload */
-/* ------------------------------------------------------------------ */
 
 type Profile = {
   email: string;
@@ -57,7 +53,7 @@ type Profile = {
   acres: number | null;
 };
 
-// Hammonton, NJ — the blueberry capital of NJ. Default demo farm.
+// Hammonton, NJ — the blueberry capital. Default demo farm.
 const DEMO_PROFILE: Profile = {
   email: "demo@agdronesnj.com",
   label: "Hammonton, NJ 08037",
@@ -68,9 +64,12 @@ const DEMO_PROFILE: Profile = {
   acres: null,
 };
 
-/* ------------------------------------------------------------------ */
-/*  Helpers                                                           */
-/* ------------------------------------------------------------------ */
+const RISK_STATUS: Record<RiskLevel, TileStatus> = {
+  low: "good",
+  moderate: "watch",
+  high: "alert",
+  extreme: "alert",
+};
 
 function verdictToStatus(v: Verdict): TileStatus {
   if (v === "GO") return "good";
@@ -78,7 +77,7 @@ function verdictToStatus(v: Verdict): TileStatus {
   return "alert";
 }
 
-function sumNextHoursPrecip(forecast: SprayForecast, hours: number): number {
+function sumNextHoursPrecip(forecast: CropIntelResponse["forecast"], hours: number): number {
   return forecast.hourly.slice(0, hours).reduce((a, h) => a + h.precipIn, 0);
 }
 
@@ -91,8 +90,6 @@ function formatRelativeHour(iso: string): string {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Main page                                                         */
-/* ------------------------------------------------------------------ */
 
 function DashboardInner() {
   const searchParams = useSearchParams();
@@ -101,11 +98,10 @@ function DashboardInner() {
   const [profile, setProfile] = useState<Profile>(DEMO_PROFILE);
   const [isDemo, setIsDemo] = useState(true);
   const [showPicker, setShowPicker] = useState(false);
-  const [forecast, setForecast] = useState<SprayForecast | null>(null);
+  const [intel, setIntel] = useState<CropIntelResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // On mount, hydrate from localStorage if a profile exists
   useEffect(() => {
     try {
       const raw = localStorage.getItem(PROFILE_STORAGE_KEY);
@@ -120,25 +116,26 @@ function DashboardInner() {
     }
   }, []);
 
-  // Fetch forecast whenever profile changes
   useEffect(() => {
     let cancelled = false;
     async function run() {
       setLoading(true);
       setError(null);
       try {
-        const url = new URL("/api/spray-forecast", window.location.origin);
+        const url = new URL("/api/crop-intel", window.location.origin);
         url.searchParams.set("lat", String(profile.lat));
         url.searchParams.set("lon", String(profile.lon));
         url.searchParams.set("label", profile.label);
+        url.searchParams.set("crop", profile.cropPrimary);
+        if (profile.cropStage) url.searchParams.set("stage", profile.cropStage);
         const res = await fetch(url.toString());
-        if (!res.ok) throw new Error(`Forecast ${res.status}`);
-        const data = (await res.json()) as SprayForecast;
+        if (!res.ok) throw new Error(`Intel ${res.status}`);
+        const data = (await res.json()) as CropIntelResponse;
         if (cancelled) return;
-        setForecast(data);
+        setIntel(data);
       } catch (e) {
         if (cancelled) return;
-        setError(e instanceof Error ? e.message : "Forecast unavailable");
+        setError(e instanceof Error ? e.message : "Dashboard unavailable");
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -149,7 +146,9 @@ function DashboardInner() {
     };
   }, [profile]);
 
+  const forecast = intel?.forecast ?? null;
   const currentHour = forecast?.hourly[0];
+
   const currentEval = useMemo(() => {
     if (!forecast || !currentHour) return null;
     return evaluateHour(currentHour, forecast.hourly.slice(1, 5));
@@ -157,20 +156,22 @@ function DashboardInner() {
 
   const nextGoWindow = useMemo(() => {
     if (!forecast) return null;
-    const slice = forecast.hourly.slice(0, 48);
-    return findNextGoWindow(slice, 2);
+    return findNextGoWindow(forecast.hourly.slice(0, 48), 2);
   }, [forecast]);
 
   const bannerCards = useMemo(() => {
-    if (!forecast) return [];
+    if (!intel) return [];
     return computeBannerCards({
-      forecast,
+      forecast: intel.forecast,
       cropId: profile.cropPrimary,
       cropStage: profile.cropStage,
+      diseases: intel.diseases,
+      chill: intel.chill,
     });
-  }, [forecast, profile.cropPrimary, profile.cropStage]);
+  }, [intel, profile.cropPrimary, profile.cropStage]);
 
   const crop = CROPS[profile.cropPrimary];
+
   const coldest24h = useMemo(() => {
     if (!forecast) return null;
     const next24 = forecast.hourly.slice(0, 24);
@@ -178,11 +179,15 @@ function DashboardInner() {
     return next24.reduce((min, h) => (h.tempF < min.tempF ? h : min));
   }, [forecast]);
 
+  const topDisease = intel?.diseases[0] ?? null;
+  const chill = intel?.chill ?? null;
+  const harvest = intel?.harvest ?? null;
+  const pollination = intel?.pollination ?? null;
+
   return (
     <>
       <GridBackground />
 
-      {/* Redirect banner */}
       {alertParam && (
         <div className="relative z-20 pt-24">
           <div className="container-narrow px-6 md:px-8">
@@ -280,13 +285,13 @@ function DashboardInner() {
       {/* ACTION BANNER */}
       <section className="px-6 md:px-8 pb-6">
         <div className="container-narrow">
-          {loading && !forecast ? (
+          {loading && !intel ? (
             <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-white/60 text-sm">
-              Loading forecast for {profile.label}…
+              Loading dashboard for {profile.label}…
             </div>
           ) : error ? (
             <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-red-300 text-sm">
-              Couldn't load forecast: {error}
+              Couldn't load: {error}
             </div>
           ) : (
             <FadeIn>
@@ -299,7 +304,7 @@ function DashboardInner() {
         </div>
       </section>
 
-      {/* TILE GRID — three columns by time horizon */}
+      {/* TILE GRID */}
       <section className="px-6 md:px-8 pb-8 md:pb-10">
         <div className="container-narrow space-y-6">
           {/* TODAY */}
@@ -322,9 +327,7 @@ function DashboardInner() {
                 }
                 context={
                   nextGoWindow && forecast
-                    ? `Next window: ${formatRelativeHour(
-                        forecast.hourly[nextGoWindow.startIdx].time
-                      )} · ${nextGoWindow.hours}h`
+                    ? `Next window: ${formatRelativeHour(forecast.hourly[nextGoWindow.startIdx].time)} · ${nextGoWindow.hours}h`
                     : "No 2h window in 48h"
                 }
                 icon={<IconDroplet className="w-4 h-4" />}
@@ -343,16 +346,14 @@ function DashboardInner() {
                     : "loading"
                 }
                 value={coldest24h ? `${Math.round(coldest24h.tempF)}°F low` : "…"}
-                context={
-                  coldest24h ? formatRelativeHour(coldest24h.time) : undefined
-                }
+                context={coldest24h ? formatRelativeHour(coldest24h.time) : undefined}
                 subtitle={
                   profile.cropStage
                     ? `${crop.name} · ${STAGE_LABEL[profile.cropStage]}`
                     : "Stage auto-detect"
                 }
                 icon={<IconSun className="w-4 h-4" />}
-                href="/resources/spray-today"
+                href="/resources/frost-watch"
               />
 
               <Tile
@@ -391,29 +392,52 @@ function DashboardInner() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               <Tile
                 label="Disease risk"
-                status="neutral"
-                value={crop.diseases[0] ? crop.diseases[0].replace(/_/g, " ") : "—"}
-                context="Live model shipping soon"
-                subtitle={`Watch for: ${crop.diseases.join(", ").replace(/_/g, " ")}`}
+                status={topDisease ? RISK_STATUS[topDisease.risk] : "loading"}
+                value={topDisease ? topDisease.name : "…"}
+                context={topDisease ? topDisease.headline : undefined}
+                subtitle={
+                  intel && intel.diseases.length > 1
+                    ? `+${intel.diseases.length - 1} more tracked`
+                    : "Infection-event model"
+                }
                 icon={<IconShield className="w-4 h-4" />}
-                href="/resources/crop-disease-guide"
+                href="/resources/disease-pressure"
               />
 
               <Tile
-                label="Pest activity"
-                status="neutral"
-                value={crop.pests.length > 0 ? `${crop.pests.length} targets` : "—"}
-                context="Open the scouting guide"
-                subtitle={crop.pests
-                  .slice(0, 3)
-                  .map((p) => p.replace(/_/g, " "))
-                  .join(", ")}
+                label="Pollination window"
+                status={
+                  pollination?.bestDay
+                    ? pollination.bestDay.rating === "excellent"
+                      ? "good"
+                      : pollination.bestDay.rating === "good"
+                      ? "good"
+                      : pollination.bestDay.rating === "fair"
+                      ? "watch"
+                      : "alert"
+                    : "loading"
+                }
+                value={
+                  pollination?.bestDay
+                    ? `${pollination.bestDay.goodHours}h best`
+                    : "…"
+                }
+                context={
+                  pollination?.bestDay
+                    ? new Date(pollination.bestDay.date).toLocaleDateString("en-US", {
+                        weekday: "short",
+                        month: "short",
+                        day: "numeric",
+                      })
+                    : undefined
+                }
+                subtitle={`${pollination?.totalGoodHours ?? 0}h of flight weather, 7d`}
                 icon={<IconTarget className="w-4 h-4" />}
-                href="/resources/pest-identifier"
+                href="/resources/crop-health"
               />
 
               <Tile
-                label="7-day rainfall forecast"
+                label="7-day rainfall"
                 status={
                   forecast
                     ? sumNextHoursPrecip(forecast, 168) > 1.5
@@ -422,9 +446,7 @@ function DashboardInner() {
                     : "loading"
                 }
                 value={
-                  forecast
-                    ? `${sumNextHoursPrecip(forecast, 168).toFixed(2)} in`
-                    : "…"
+                  forecast ? `${sumNextHoursPrecip(forecast, 168).toFixed(2)} in` : "…"
                 }
                 context="Next 7 days total"
                 icon={<IconChart className="w-4 h-4" />}
@@ -440,40 +462,63 @@ function DashboardInner() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               <Tile
-                label="Growing degree days"
-                status="neutral"
-                value={`Base ${crop.gddBase}°F`}
-                context="Open the GDD calculator"
-                subtitle={`${crop.name} phenology tracker`}
-                icon={<IconBarChart className="w-4 h-4" />}
-                href="/resources/growing-degree-days"
-              />
-
-              <Tile
                 label="Chill hours"
-                status="neutral"
-                value={
-                  crop.varieties[0]?.chillHoursReq
-                    ? `${crop.varieties[0].chillHoursReq}h req`
-                    : "—"
+                status={
+                  chill
+                    ? chill.percentComplete >= 100
+                      ? "good"
+                      : chill.percentComplete >= 70
+                      ? "watch"
+                      : "neutral"
+                    : "loading"
                 }
-                context="Full tracker shipping soon"
+                value={
+                  chill ? `${chill.hours}h / ${chill.chillRequired}h` : "…"
+                }
+                context={
+                  chill
+                    ? chill.percentComplete >= 100
+                      ? `✓ Complete · ${chill.variety}`
+                      : `${chill.percentComplete}% · ${chill.variety}`
+                    : undefined
+                }
                 subtitle={
-                  crop.varieties[0]
-                    ? `${crop.varieties[0].name} target`
-                    : "Variety requirement"
+                  chill?.bloomPrediction.date
+                    ? `Bloom ETA ${chill.bloomPrediction.date}`
+                    : "Since Oct 1"
                 }
                 icon={<IconZap className="w-4 h-4" />}
-                href="/resources/growing-degree-days"
+                href="/resources/chill-hours"
               />
 
               <Tile
                 label="Harvest ETA"
-                status="neutral"
-                value={`${crop.gddBloomToHarvest} GDD`}
-                context="From full bloom"
-                subtitle={`Typical bloom ${crop.typicalBloomRange.start}–${crop.typicalBloomRange.end}`}
+                status={
+                  harvest?.harvestDateIso
+                    ? harvest.status === "harvest"
+                      ? "good"
+                      : "neutral"
+                    : "neutral"
+                }
+                value={harvest?.harvestDateIso ?? "Pre-bloom"}
+                context={
+                  harvest?.harvestDateIso
+                    ? `±${harvest.plusMinusDays}d · ${harvest.gddAccumulated}/${harvest.gddTarget} GDD`
+                    : harvest
+                    ? `Typical bloom ${crop.typicalBloomRange.start}–${crop.typicalBloomRange.end}`
+                    : undefined
+                }
+                subtitle={`Base ${crop.gddBase}°F`}
                 icon={<IconLeaf className="w-4 h-4" />}
+                href="/resources/harvest-eta"
+              />
+
+              <Tile
+                label="Growing degree days"
+                status="neutral"
+                value="GDD tracker"
+                subtitle={`${crop.name} phenology calculator`}
+                icon={<IconBarChart className="w-4 h-4" />}
                 href="/resources/growing-degree-days"
               />
             </div>
@@ -485,6 +530,16 @@ function DashboardInner() {
               More tools
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <Tile
+                label="Pest activity"
+                status="neutral"
+                value={`${crop.pests.length} targets`}
+                subtitle={crop.pests
+                  .slice(0, 3)
+                  .map((p) => p.replace(/_/g, " "))
+                  .join(", ")}
+                href="/resources/pest-identifier"
+              />
               <Tile
                 label="Crop health"
                 status="neutral"
@@ -501,11 +556,7 @@ function DashboardInner() {
                     ? "Estimate yield + revenue"
                     : "Blueberry model live today"
                 }
-                href={
-                  profile.cropPrimary === "blueberry"
-                    ? "/resources/blueberry-yield-calculator"
-                    : "/resources/blueberry-yield-calculator"
-                }
+                href="/resources/blueberry-yield-calculator"
               />
               <Tile
                 label="Plan my farm"
@@ -513,13 +564,6 @@ function DashboardInner() {
                 value="Crop recommender"
                 subtitle="Match crops to your soil"
                 href="/resources/crop-recommender"
-              />
-              <Tile
-                label="See what drones see"
-                status="neutral"
-                value="NDVI · thermal · RGB"
-                subtitle="Imagery gallery"
-                href="/resources/drone-imagery"
               />
             </div>
           </div>

@@ -2,12 +2,11 @@
  * Compute the 0–3 urgent action cards shown on the dashboard's top banner.
  *
  * Priority order (highest first):
- *   1. Frost / freeze within 24h below the crop's stage kill threshold
- *   2. Rainfast window closing (recent rain + next spray)
- *   3. Spray window opening today/tomorrow (≥2h)
- *
- * Later phases will add: disease infection event within 72h, chill complete,
- * bloom start, pollination window.
+ *   1. Frost / freeze within 24h below the crop-stage kill threshold
+ *   2. Disease infection event within 72h at HIGH/EXTREME risk
+ *   3. Rainfast window closing (recent rain)
+ *   4. Chill hours just satisfied (timely winter nudge)
+ *   5. Spray window opening today/tomorrow (≥2h)
  */
 
 import type { SprayForecast } from "@/lib/spray-decision";
@@ -19,11 +18,18 @@ import {
   type CropId,
   type CropStage,
 } from "./crops";
+import type { DiseasePrediction } from "./disease-models";
+import type { ChillAccumulation } from "./chill-hours";
 
 export type BannerInputs = {
   forecast: SprayForecast;
   cropId: CropId | null;
   cropStage: CropStage | null;
+  diseases?: DiseasePrediction[];
+  chill?: (ChillAccumulation & {
+    chillRequired: number;
+    bloomPrediction: { daysOut: number | null; date: string | null; chillComplete: boolean };
+  }) | null;
 };
 
 function formatLocalDateTime(iso: string): string {
@@ -41,21 +47,13 @@ function formatLocalTimeRange(startIso: string, endIso: string): string {
   )}`;
 }
 
-/**
- * Does the forecast show a freeze hit below the crop's stage kill temp in the
- * next 24 hours? We use "kill" temp for alert severity; "damage" for watch.
- */
 function computeFrostCard(inputs: BannerInputs): ActionCard | null {
   const { forecast, cropId, cropStage } = inputs;
-
-  // Minimum temperature in the next 24 hours.
   const next24 = forecast.hourly.slice(0, 24);
   if (next24.length === 0) return null;
   const minEntry = next24.reduce((min, h) => (h.tempF < min.tempF ? h : min));
   const minF = minEntry.tempF;
 
-  // No farm profile yet? Use a conservative generic blossom threshold (28°F).
-  // Only warn if the generic threshold is actually threatened.
   if (!cropId) {
     if (minF >= 32) return null;
     return {
@@ -69,33 +67,76 @@ function computeFrostCard(inputs: BannerInputs): ActionCard | null {
     };
   }
 
-  // With crop + stage, look up the actual kill threshold.
   const crop = CROPS[cropId];
   const stage = cropStage ?? crop.stages[0];
   const t = frostThresholdFor(cropId, stage);
   if (!t) return null;
+  if (minF > t.damageF) return null;
 
-  if (minF > t.damageF) return null; // comfortable margin
-
-  const severity: ActionCard["severity"] =
-    minF <= t.killF ? "alert" : "watch";
+  const severity: ActionCard["severity"] = minF <= t.killF ? "alert" : "watch";
   const verb = minF <= t.killF ? "Kill temp threatened" : "Damage temp threatened";
   return {
     id: "frost",
     severity,
     headline: `${verb}: ${Math.round(minF)}°F at ${formatLocalDateTime(minEntry.time)}`,
     detail: `${crop.name} at ${stage.replace("_", " ")} is damaged below ${t.damageF}°F, killed below ${t.killF}°F.`,
-    ctaLabel: "See full forecast",
+    ctaLabel: "See frost watch",
+    ctaHref: "/resources/frost-watch",
+  };
+}
+
+function computeDiseaseCard(inputs: BannerInputs): ActionCard | null {
+  const disease = inputs.diseases?.find((d) => d.risk === "high" || d.risk === "extreme");
+  if (!disease) return null;
+  const whenSuffix = disease.nextEvent
+    ? ` at ${formatLocalDateTime(disease.nextEvent.startIso)}`
+    : "";
+  return {
+    id: `disease-${disease.disease}`,
+    severity: disease.risk === "extreme" ? "alert" : "watch",
+    headline: `${disease.name} risk ${disease.risk.toUpperCase()}${whenSuffix}`,
+    detail: disease.recommendation,
+    ctaLabel: "Book a spray",
+    ctaHref: "/contact",
+  };
+}
+
+function computeRainfastCard(inputs: BannerInputs): ActionCard | null {
+  const { pastRain } = inputs.forecast;
+  if (pastRain.hoursSinceLastRain == null || pastRain.hoursSinceLastRain > 6) {
+    return null;
+  }
+  return {
+    id: "rainfast",
+    severity: "watch",
+    headline: `Rain ${pastRain.hoursSinceLastRain.toFixed(0)}h ago — within rainfast window`,
+    detail: "Most fungicides and contact herbicides aren't rainfast yet. Check product label before respraying.",
+    ctaLabel: "See rain timer",
     ctaHref: "/resources/spray-today",
   };
 }
 
+function computeChillCard(inputs: BannerInputs): ActionCard | null {
+  if (!inputs.chill) return null;
+  if (!inputs.chill.bloomPrediction.chillComplete) return null;
+  const over = inputs.chill.hours - inputs.chill.chillRequired;
+  if (over < 0 || over > 60) return null; // only nudge in the small window near completion
+  return {
+    id: "chill-complete",
+    severity: "info",
+    headline: `Chill requirement met (${inputs.chill.hours}h / ${inputs.chill.chillRequired}h)`,
+    detail: inputs.chill.bloomPrediction.date
+      ? `Bloom projected ${inputs.chill.bloomPrediction.date} — ready to start pest scouting and pre-bloom sprays.`
+      : "Ready to transition into bud-break management.",
+    ctaLabel: "See chill tracker",
+    ctaHref: "/resources/chill-hours",
+  };
+}
+
 function computeSprayWindowCard(inputs: BannerInputs): ActionCard | null {
-  const { forecast } = inputs;
-  const next48 = forecast.hourly.slice(0, 48);
+  const next48 = inputs.forecast.hourly.slice(0, 48);
   const window = findNextGoWindow(next48, 2);
   if (!window) return null;
-
   const startIso = next48[window.startIdx].time;
   const endIso = next48[window.endIdx].time;
   return {
@@ -108,29 +149,12 @@ function computeSprayWindowCard(inputs: BannerInputs): ActionCard | null {
   };
 }
 
-function computeRainfastCard(inputs: BannerInputs): ActionCard | null {
-  const { pastRain } = inputs.forecast;
-  if (
-    pastRain.hoursSinceLastRain == null ||
-    pastRain.hoursSinceLastRain > 6
-  ) {
-    return null;
-  }
-  return {
-    id: "rainfast",
-    severity: "watch",
-    headline: `Rain ${pastRain.hoursSinceLastRain.toFixed(0)}h ago — within rainfast window`,
-    detail:
-      "Most fungicides and contact herbicides aren't rainfast yet. Check product label before respraying.",
-    ctaLabel: "See rain timer",
-    ctaHref: "/resources/spray-today",
-  };
-}
-
 export function computeBannerCards(inputs: BannerInputs): ActionCard[] {
   const candidates: (ActionCard | null)[] = [
     computeFrostCard(inputs),
+    computeDiseaseCard(inputs),
     computeRainfastCard(inputs),
+    computeChillCard(inputs),
     computeSprayWindowCard(inputs),
   ];
   return candidates.filter((c): c is ActionCard => c !== null).slice(0, 3);
